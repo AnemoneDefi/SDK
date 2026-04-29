@@ -1,0 +1,561 @@
+{
+  "address": "KQs6ci5FtedFKPVJThAZSMMXyosK4TvnF7kcDSx5Jwd",
+  "metadata": {
+    "name": "anemone",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "create_market",
+      "discriminator": [
+        103,
+        226,
+        97,
+        235,
+        200,
+        188,
+        251,
+        254
+      ],
+      "accounts": [
+        {
+          "name": "protocol_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "underlying_reserve"
+              },
+              {
+                "kind": "arg",
+                "path": "tenor_seconds"
+              }
+            ]
+          }
+        },
+        {
+          "name": "lp_vault",
+          "docs": [
+            "LP vault: holds USDC in transit during settlements"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  112,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "collateral_vault",
+          "docs": [
+            "Collateral vault: holds trader collateral"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  108,
+                  108,
+                  97,
+                  116,
+                  101,
+                  114,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "lp_mint",
+          "docs": [
+            "LP token mint: receipt tokens for liquidity providers"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  108,
+                  112,
+                  95,
+                  109,
+                  105,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "underlying_reserve",
+          "docs": [
+            "The lending protocol's reserve account (e.g. Kamino USDC Reserve)"
+          ]
+        },
+        {
+          "name": "underlying_protocol",
+          "docs": [
+            "The lending protocol's program ID (e.g. Kamino K-Lend program)"
+          ]
+        },
+        {
+          "name": "underlying_mint",
+          "docs": [
+            "The token mint for this market (e.g. USDC mint)"
+          ]
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "protocol_state"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "tenor_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "settlement_period_seconds",
+          "type": "i64"
+        },
+        {
+          "name": "max_utilization_bps",
+          "type": "u16"
+        },
+        {
+          "name": "base_spread_bps",
+          "type": "u16"
+        },
+        {
+          "name": "max_leverage",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "initialize_protocol",
+      "discriminator": [
+        188,
+        233,
+        252,
+        106,
+        134,
+        146,
+        202,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "protocol_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "protocol_fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "opening_fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "liquidation_fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "withdrawal_fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "early_close_fee_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_rate_index",
+      "discriminator": [
+        191,
+        173,
+        63,
+        26,
+        197,
+        186,
+        0,
+        246
+      ],
+      "accounts": [
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market.underlying_reserve",
+                "account": "SwapMarket"
+              },
+              {
+                "kind": "account",
+                "path": "market.tenor_seconds",
+                "account": "SwapMarket"
+              }
+            ]
+          }
+        },
+        {
+          "name": "kamino_reserve",
+          "docs": [
+            "Kamino Reserve account — read-only, raw bytes.",
+            "Must match the reserve this market was created with.",
+            "The address is validated against market.underlying_reserve."
+          ]
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ProtocolState",
+      "discriminator": [
+        33,
+        51,
+        173,
+        134,
+        35,
+        140,
+        195,
+        248
+      ]
+    },
+    {
+      "name": "SwapMarket",
+      "discriminator": [
+        1,
+        225,
+        114,
+        244,
+        211,
+        158,
+        72,
+        82
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidReserve",
+      "msg": "Kamino reserve does not match market's underlying_reserve"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidRateIndex",
+      "msg": "Rate index cannot be zero"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidElapsedTime",
+      "msg": "Elapsed time must be positive"
+    },
+    {
+      "code": 6003,
+      "name": "MathOverflow",
+      "msg": "Math overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "ProtocolState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_markets",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_fee_bps",
+            "docs": [
+              "10% performance fee on LP spread (1000 = 10%)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "opening_fee_bps",
+            "docs": [
+              "0.2% on notional when opening swap (20 = 0.2%)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_fee_bps",
+            "docs": [
+              "3% on remaining margin at liquidation (300 = 3%)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "withdrawal_fee_bps",
+            "docs": [
+              "0.05% on LP withdrawal (5 = 0.05%)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "early_close_fee_bps",
+            "docs": [
+              "5% on collateral returned when trader closes early (500 = 5%)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapMarket",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "protocol_state",
+            "type": "pubkey"
+          },
+          {
+            "name": "underlying_protocol",
+            "type": "pubkey"
+          },
+          {
+            "name": "underlying_reserve",
+            "type": "pubkey"
+          },
+          {
+            "name": "underlying_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "lp_vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "kamino_deposit_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "collateral_vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "lp_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "tenor_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "settlement_period_seconds",
+            "type": "i64"
+          },
+          {
+            "name": "max_utilization_bps",
+            "docs": [
+              "6000 = 60%"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "base_spread_bps",
+            "type": "u16"
+          },
+          {
+            "name": "max_leverage",
+            "type": "u8"
+          },
+          {
+            "name": "total_lp_deposits",
+            "type": "u64"
+          },
+          {
+            "name": "total_lp_shares",
+            "type": "u64"
+          },
+          {
+            "name": "total_fixed_notional",
+            "type": "u64"
+          },
+          {
+            "name": "total_variable_notional",
+            "type": "u64"
+          },
+          {
+            "name": "pending_withdrawals",
+            "type": "u64"
+          },
+          {
+            "name": "current_rate_index",
+            "type": "u128"
+          },
+          {
+            "name": "last_rate_update_ts",
+            "type": "i64"
+          },
+          {
+            "name": "cumulative_fees_earned",
+            "type": "u64"
+          },
+          {
+            "name": "total_open_positions",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
