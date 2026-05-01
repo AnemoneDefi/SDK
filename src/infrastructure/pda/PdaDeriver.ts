@@ -60,15 +60,19 @@ export const PdaDeriver = {
     ]);
   },
 
+  /**
+   * Swap position seed mirrors the program: `[b"swap", trader, market, nonce]`.
+   * Note that the trader (owner) comes BEFORE market, opposite of `lpPosition`.
+   */
   swapPosition(
+    trader: PublicKey,
     market: PublicKey,
-    owner: PublicKey,
     nonce: number
   ): Promise<DerivedPda> {
     return derive([
-      toSeedBuffer(SEEDS.POSITION),
+      toSeedBuffer(SEEDS.SWAP_POSITION),
+      trader.toBuffer(),
       market.toBuffer(),
-      owner.toBuffer(),
       Buffer.from([nonce]),
     ]);
   },

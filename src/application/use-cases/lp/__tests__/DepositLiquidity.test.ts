@@ -6,6 +6,10 @@ vi.mock("../../../../infrastructure/pda/PdaDeriver", () => {
   const { PublicKey } = require("@solana/web3.js");
   return {
     PdaDeriver: {
+      protocol: vi.fn().mockResolvedValue({
+        address: new PublicKey("So11111111111111111111111111111111111111119"),
+        bump: 254,
+      }),
       lpPosition: vi.fn().mockResolvedValue({
         address: new PublicKey("So11111111111111111111111111111111111111112"),
         bump: 254,
@@ -83,8 +87,8 @@ describe("DepositLiquidity", () => {
       amount: BigInt(5_000_000),
     });
 
-    expect(program.methods.depositLiquidity.mock.calls[0][0]).toBe(
-      BigInt(5_000_000)
+    expect(program.methods.depositLiquidity.mock.calls[0][0].toString()).toBe(
+      "5000000"
     );
   });
 

@@ -6,6 +6,10 @@ vi.mock("../../../../infrastructure/pda/PdaDeriver", () => {
   const { PublicKey } = require("@solana/web3.js");
   return {
     PdaDeriver: {
+      protocol: vi.fn().mockResolvedValue({
+        address: new PublicKey("So11111111111111111111111111111111111111121"),
+        bump: 254,
+      }),
       market: vi.fn().mockResolvedValue({
         address: new PublicKey("So11111111111111111111111111111111111111112"),
         bump: 253,
@@ -19,15 +23,6 @@ vi.mock("../../../../infrastructure/pda/PdaDeriver", () => {
         bump: 251,
       }),
     },
-  };
-});
-
-vi.mock("@solana/spl-token", () => {
-  const { PublicKey } = require("@solana/web3.js");
-  return {
-    TOKEN_PROGRAM_ID: new PublicKey(
-      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-    ),
   };
 });
 
@@ -53,13 +48,33 @@ describe("DepositToKamino", () => {
   const kaminoLendingMarketAuthority = new PublicKey(
     "So11111111111111111111111111111111111111117"
   );
-  const kaminoReserveLiquiditySupply = new PublicKey(
+  const reserveLiquidityMint = new PublicKey(
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  );
+  const reserveLiquiditySupply = new PublicKey(
     "So11111111111111111111111111111111111111118"
   );
-  const kaminoReserveCollateralMint = new PublicKey(
+  const reserveCollateralMint = new PublicKey(
     "So11111111111111111111111111111111111111119"
   );
+  const tokenProgram = new PublicKey(
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+  );
   const tenorSeconds = BigInt(30 * 86_400);
+
+  const baseParams = {
+    keeper,
+    underlyingReserve,
+    tenorSeconds,
+    kaminoReserve,
+    kaminoLendingMarket,
+    kaminoLendingMarketAuthority,
+    reserveLiquidityMint,
+    reserveLiquiditySupply,
+    reserveCollateralMint,
+    collateralTokenProgram: tokenProgram,
+    liquidityTokenProgram: tokenProgram,
+  };
 
   let rpcMock: ReturnType<typeof vi.fn>;
 
@@ -72,38 +87,24 @@ describe("DepositToKamino", () => {
     const useCase = new DepositToKamino(program);
 
     const result = await useCase.execute({
-      keeper,
-      underlyingReserve,
-      tenorSeconds,
-      kaminoReserve,
-      kaminoLendingMarket,
-      kaminoLendingMarketAuthority,
-      kaminoReserveLiquiditySupply,
-      kaminoReserveCollateralMint,
+      ...baseParams,
       amount: BigInt(10_000_000),
     });
 
     expect(result.signature).toBe("kaminoDepositSig");
   });
 
-  it("passes amount to program method", async () => {
+  it("passes amount to program method as BN", async () => {
     const program = buildProgramMock(rpcMock);
     const useCase = new DepositToKamino(program);
 
     await useCase.execute({
-      keeper,
-      underlyingReserve,
-      tenorSeconds,
-      kaminoReserve,
-      kaminoLendingMarket,
-      kaminoLendingMarketAuthority,
-      kaminoReserveLiquiditySupply,
-      kaminoReserveCollateralMint,
+      ...baseParams,
       amount: BigInt(99_000_000),
     });
 
-    expect(program.methods.depositToKamino.mock.calls[0][0]).toBe(
-      BigInt(99_000_000)
+    expect(program.methods.depositToKamino.mock.calls[0][0].toString()).toBe(
+      "99000000"
     );
   });
 });

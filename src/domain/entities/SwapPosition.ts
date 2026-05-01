@@ -1,6 +1,5 @@
 import { PositionStatus, SwapDirection } from "../enums";
 
-/** Phase 2 — not yet deployed on-chain but typed for SDK completeness */
 export interface SwapPosition {
   publicKey: string;
   owner: string;
@@ -8,13 +7,14 @@ export interface SwapPosition {
   direction: SwapDirection;
   notional: bigint;
   fixedRateBps: bigint;
-  leverage: number;
   collateralDeposited: bigint;
   collateralRemaining: bigint;
   entryRateIndex: bigint;
   lastSettledRateIndex: bigint;
   realizedPnl: bigint;
   numSettlements: number;
+  /** Trader PnL credit the lp_vault could not cover at settle/close/liquidation. */
+  unpaidPnl: bigint;
   openTimestamp: bigint;
   maturityTimestamp: bigint;
   nextSettlementTs: bigint;

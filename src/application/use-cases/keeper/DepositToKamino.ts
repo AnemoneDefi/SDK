@@ -1,6 +1,11 @@
-import { Program } from "@coral-xyz/anchor";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { PublicKey, TransactionSignature } from "@solana/web3.js";
+import type { AnemoneProgram } from "../../../infrastructure/anchor/AnemoneProgram";
+import { BN } from "@coral-xyz/anchor";
+import {
+  PublicKey,
+  SYSVAR_INSTRUCTIONS_PUBKEY,
+  TransactionInstruction,
+  TransactionSignature,
+} from "@solana/web3.js";
 import { PdaDeriver } from "../../../infrastructure/pda/PdaDeriver";
 import { KAMINO_PROGRAM_ID } from "../../../constants";
 
@@ -11,9 +16,14 @@ export interface DepositToKaminoParams {
   kaminoReserve: PublicKey;
   kaminoLendingMarket: PublicKey;
   kaminoLendingMarketAuthority: PublicKey;
-  kaminoReserveLiquiditySupply: PublicKey;
-  kaminoReserveCollateralMint: PublicKey;
+  reserveLiquidityMint: PublicKey;
+  reserveLiquiditySupply: PublicKey;
+  reserveCollateralMint: PublicKey;
+  collateralTokenProgram: PublicKey;
+  liquidityTokenProgram: PublicKey;
   amount: bigint;
+  /** Atomic preInstructions — typically a Kamino `refresh_reserve`. */
+  preInstructions?: TransactionInstruction[];
 }
 
 export interface DepositToKaminoResult {
@@ -21,7 +31,7 @@ export interface DepositToKaminoResult {
 }
 
 export class DepositToKamino {
-  constructor(private readonly program: Program) {}
+  constructor(private readonly program: AnemoneProgram) {}
 
   async execute(params: DepositToKaminoParams): Promise<DepositToKaminoResult> {
     const {
@@ -31,11 +41,16 @@ export class DepositToKamino {
       kaminoReserve,
       kaminoLendingMarket,
       kaminoLendingMarketAuthority,
-      kaminoReserveLiquiditySupply,
-      kaminoReserveCollateralMint,
+      reserveLiquidityMint,
+      reserveLiquiditySupply,
+      reserveCollateralMint,
+      collateralTokenProgram,
+      liquidityTokenProgram,
       amount,
+      preInstructions,
     } = params;
 
+    const { address: protocolState } = await PdaDeriver.protocol();
     const { address: market } = await PdaDeriver.market(
       underlyingReserve,
       tenorSeconds
@@ -44,22 +59,29 @@ export class DepositToKamino {
     const { address: kaminoDepositAccount } =
       await PdaDeriver.kaminoDepositAccount(market);
 
-    const signature = await (this.program.methods as any)
-      .depositToKamino(amount)
+    let builder = this.program.methods
+      .depositToKamino(new BN(amount.toString()))
       .accountsStrict({
+        protocolState,
+        keeper,
         market,
         lpVault,
         kaminoDepositAccount,
         kaminoReserve,
         kaminoLendingMarket,
         kaminoLendingMarketAuthority,
-        kaminoReserveLiquiditySupply,
-        kaminoReserveCollateralMint,
+        reserveLiquidityMint,
+        reserveLiquiditySupply,
+        reserveCollateralMint,
+        collateralTokenProgram,
+        liquidityTokenProgram,
+        instructionSysvarAccount: SYSVAR_INSTRUCTIONS_PUBKEY,
         kaminoProgram: new PublicKey(KAMINO_PROGRAM_ID),
-        keeper,
-        tokenProgram: TOKEN_PROGRAM_ID,
-      })
-      .rpc();
+      });
+    if (preInstructions && preInstructions.length > 0) {
+      builder = builder.preInstructions(preInstructions);
+    }
+    const signature = await builder.rpc();
 
     return { signature };
   }

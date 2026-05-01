@@ -25,9 +25,6 @@ export const DEFAULT_MAX_UTILIZATION_BPS = 6_000;
 /** Base spread in bps: 0.5% */
 export const DEFAULT_BASE_SPREAD_BPS = 50;
 
-/** Default max leverage for traders */
-export const DEFAULT_MAX_LEVERAGE = 20;
-
 /** PDA seeds */
 export const SEEDS = {
   PROTOCOL: "protocol",
@@ -37,5 +34,5 @@ export const SEEDS = {
   LP_MINT: "lp_mint",
   KAMINO_DEPOSIT: "kamino_deposit",
   LP_POSITION: "lp",
-  POSITION: "position",
+  SWAP_POSITION: "swap",
 } as const;

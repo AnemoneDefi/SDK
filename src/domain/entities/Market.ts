@@ -14,16 +14,22 @@ export interface Market {
   settlementPeriodSeconds: bigint;
   maxUtilizationBps: number;
   baseSpreadBps: number;
-  maxLeverage: number;
-  totalLpDeposits: bigint;
+  /** Net asset value of the LP pool in underlying-token decimals. */
+  lpNav: bigint;
   totalLpShares: bigint;
   totalFixedNotional: bigint;
   totalVariableNotional: bigint;
-  pendingWithdrawals: bigint;
+  previousRateIndex: bigint;
+  previousRateUpdateTs: bigint;
   currentRateIndex: bigint;
   lastRateUpdateTs: bigint;
   cumulativeFeesEarned: bigint;
   totalOpenPositions: bigint;
+  totalKaminoCollateral: bigint;
+  /** Last known USDC value of the k-tokens in `kaminoDepositAccount`. */
+  lastKaminoSnapshotUsdc: bigint;
+  /** Unix timestamp of the most recent `sync_kamino_yield` call. */
+  lastKaminoSyncTs: bigint;
   status: MarketStatus;
   bump: number;
 }
