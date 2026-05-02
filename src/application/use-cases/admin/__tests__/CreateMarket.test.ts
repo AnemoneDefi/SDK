@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { CreateMarket } from "../CreateMarket";
 import {
   DEFAULT_BASE_SPREAD_BPS,
-  DEFAULT_MAX_LEVERAGE,
   DEFAULT_MAX_UTILIZATION_BPS,
   SECONDS_PER_DAY,
 } from "../../../../constants";
@@ -33,6 +32,10 @@ vi.mock("../../../../infrastructure/pda/PdaDeriver", () => {
         address: new PublicKey("So11111111111111111111111111111111111111113"),
         bump: 250,
       }),
+      kaminoDepositAccount: vi.fn().mockResolvedValue({
+        address: new PublicKey("So11111111111111111111111111111111111111118"),
+        bump: 249,
+      }),
     },
   };
 });
@@ -58,6 +61,9 @@ describe("CreateMarket", () => {
   const underlyingMint = new PublicKey(
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
   );
+  const kaminoCollateralMint = new PublicKey(
+    "So11111111111111111111111111111111111111124"
+  );
 
   let rpcMock: ReturnType<typeof vi.fn>;
 
@@ -74,6 +80,7 @@ describe("CreateMarket", () => {
       underlyingReserve,
       underlyingProtocol,
       underlyingMint,
+      kaminoCollateralMint,
     });
 
     expect(result.signature).toBe("txSig123");
@@ -97,13 +104,13 @@ describe("CreateMarket", () => {
       underlyingReserve,
       underlyingProtocol,
       underlyingMint,
+      kaminoCollateralMint,
     });
 
     const args = program.methods.createMarket.mock.calls[0];
-    expect(args[1]).toBe(BigInt(SECONDS_PER_DAY));
+    expect(args[1].toString()).toBe(String(SECONDS_PER_DAY));
     expect(args[2]).toBe(DEFAULT_MAX_UTILIZATION_BPS);
     expect(args[3]).toBe(DEFAULT_BASE_SPREAD_BPS);
-    expect(args[4]).toBe(DEFAULT_MAX_LEVERAGE);
   });
 
   it("uses custom market parameters when specified", async () => {
@@ -115,18 +122,17 @@ describe("CreateMarket", () => {
       underlyingReserve,
       underlyingProtocol,
       underlyingMint,
+      kaminoCollateralMint,
       tenorSeconds: BigInt(90 * SECONDS_PER_DAY),
       settlementPeriodSeconds: BigInt(SECONDS_PER_DAY * 7),
       maxUtilizationBps: 5000,
       baseSpreadBps: 100,
-      maxLeverage: 10,
     });
 
     const args = program.methods.createMarket.mock.calls[0];
-    expect(args[0]).toBe(BigInt(90 * SECONDS_PER_DAY));
-    expect(args[1]).toBe(BigInt(SECONDS_PER_DAY * 7));
+    expect(args[0].toString()).toBe(String(90 * SECONDS_PER_DAY));
+    expect(args[1].toString()).toBe(String(SECONDS_PER_DAY * 7));
     expect(args[2]).toBe(5000);
     expect(args[3]).toBe(100);
-    expect(args[4]).toBe(10);
   });
 });

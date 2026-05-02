@@ -1,4 +1,5 @@
-import { Program } from "@coral-xyz/anchor";
+import type { AnemoneProgram } from "../../../infrastructure/anchor/AnemoneProgram";
+import { BN } from "@coral-xyz/anchor";
 import {
   TOKEN_PROGRAM_ID,
   getAssociatedTokenAddressSync,
@@ -21,12 +22,13 @@ export interface DepositLiquidityResult {
 }
 
 export class DepositLiquidity {
-  constructor(private readonly program: Program) {}
+  constructor(private readonly program: AnemoneProgram) {}
 
   async execute(params: DepositLiquidityParams): Promise<DepositLiquidityResult> {
     const { depositor, market, underlyingMint, lpMint, lpVault, amount } =
       params;
 
+    const { address: protocolState } = await PdaDeriver.protocol();
     const { address: lpPosition } = await PdaDeriver.lpPosition(
       depositor,
       market
@@ -41,13 +43,15 @@ export class DepositLiquidity {
       depositor
     );
 
-    const signature = await (this.program.methods as any)
-      .depositLiquidity(amount)
+    const signature = await this.program.methods
+      .depositLiquidity(new BN(amount.toString()))
       .accountsStrict({
+        protocolState,
         market,
         lpPosition,
         lpVault,
         lpMint,
+        underlyingMint,
         depositorTokenAccount,
         depositorLpTokenAccount,
         depositor,

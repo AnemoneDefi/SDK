@@ -1,4 +1,4 @@
-import { Program } from "@coral-xyz/anchor";
+import type { AnemoneProgram } from "../../../infrastructure/anchor/AnemoneProgram";
 import { PublicKey, SystemProgram, TransactionSignature } from "@solana/web3.js";
 import { PdaDeriver } from "../../../infrastructure/pda/PdaDeriver";
 import {
@@ -25,7 +25,7 @@ export interface InitializeProtocolResult {
 }
 
 export class InitializeProtocol {
-  constructor(private readonly program: Program) {}
+  constructor(private readonly program: AnemoneProgram) {}
 
   async execute(
     params: InitializeProtocolParams

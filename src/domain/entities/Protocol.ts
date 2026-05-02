@@ -1,6 +1,7 @@
 export interface Protocol {
   publicKey: string;
   authority: string;
+  keeperAuthority: string;
   treasury: string;
   totalMarkets: bigint;
   protocolFeeBps: number;
@@ -9,4 +10,5 @@ export interface Protocol {
   withdrawalFeeBps: number;
   earlyCloseFeeBps: number;
   bump: number;
+  paused: boolean;
 }

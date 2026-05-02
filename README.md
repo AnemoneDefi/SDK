@@ -29,39 +29,65 @@ const sdk = new Anemone({ connection });
 const sdk = new Anemone({ connection, wallet });
 ```
 
-The `wallet` can be any object that implements `signTransaction` and `signAllTransactions` — Phantom, a `Keypair`-based wallet, or any Wallet Adapter compatible wallet.
+`wallet` is an `AnchorWallet` (Phantom, Wallet Adapter, or anything that implements `signTransaction` + `signAllTransactions`).
+
+The SDK groups instructions by role:
+
+| Namespace | Instructions |
+|---|---|
+| `sdk.query` | `protocol`, `markets`, `positions` (read-only) |
+| `sdk.admin` | `initializeProtocol`, `createMarket`, `setKeeper`, `pauseProtocol`, `unpauseProtocol`, `setRateIndexOracle` |
+| `sdk.lp` | `depositLiquidity`, `requestWithdrawal` |
+| `sdk.keeper` | `updateRateIndex`, `syncKaminoYield`, `depositToKamino`, `withdrawFromKamino` |
+| `sdk.trader` | `openSwap`, `addCollateral`, `settlePeriod`, `closePositionEarly`, `claimMatured`, `liquidatePosition` |
 
 ---
 
 ## Reading on-chain state
 
 ```typescript
-// Protocol global config
 const protocol = await sdk.query.protocol.fetch();
-
-// All active markets
 const markets = await sdk.query.markets.fetchAll();
 
-// A specific market by address
-const market = await sdk.query.markets.fetchByAddress("...");
-
-// A market by its reserve + tenor
 const market = await sdk.query.markets.fetchByReserveAndTenor(
   KAMINO_USDC_RESERVE,
-  BigInt(30 * 86_400) // 30-day tenor
+  BigInt(TENOR_30_DAYS)
 );
 
-// LP position for a wallet
-const position = await sdk.query.positions.fetchLpPosition(
+// LP position
+const lpPosition = await sdk.query.positions.fetchLpPosition(
   wallet.publicKey.toBase58(),
   market.publicKey
 );
 
-// All LP positions for a wallet
-const positions = await sdk.query.positions.fetchLpPositionsByOwner(
-  wallet.publicKey.toBase58()
-);
+// Swap position (trader+market+nonce)
+const swap = await sdk.query.positions.fetchSwapPosition(swapPositionAddress);
 ```
+
+---
+
+## `preInstructions` — bundling Kamino refresh
+
+Most Kamino-touching instructions accept an optional `preInstructions: TransactionInstruction[]`. The typical pattern is to bundle a Kamino `refresh_reserve` so the program reads post-accrual values:
+
+```typescript
+import { TransactionInstruction } from "@solana/web3.js";
+
+// Build a Kamino refresh_reserve instruction (Anchor discriminator)
+const refresh = refreshReserveIx({ /* reserve, lendingMarket, scopePrices, kaminoProgram */ });
+
+await sdk.keeper.updateRateIndex.execute({
+  keeper: wallet.publicKey,
+  underlyingReserve: new PublicKey(KAMINO_USDC_RESERVE),
+  tenorSeconds: BigInt(TENOR_30_DAYS),
+  kaminoReserve: new PublicKey(KAMINO_USDC_RESERVE),
+  preInstructions: [refresh], // atomic: refresh then read
+});
+```
+
+Use cases that accept `preInstructions`: `updateRateIndex`, `syncKaminoYield`, `depositToKamino`, `withdrawFromKamino`, `requestWithdrawal`, `closePositionEarly`, `claimMatured`, `liquidatePosition`.
+
+Without a fresh refresh, the program may reject with `StaleOracle` or `InvalidRateIndex`.
 
 ---
 
@@ -70,34 +96,140 @@ const positions = await sdk.query.positions.fetchLpPositionsByOwner(
 ### Deposit liquidity
 
 ```typescript
-import { KAMINO_USDC_RESERVE, USDC_MINT, TENOR_30_DAYS } from "@anemone/sdk";
-
-const market = await sdk.query.markets.fetchByReserveAndTenor(
-  KAMINO_USDC_RESERVE,
-  BigInt(TENOR_30_DAYS)
-);
-
 const { signature, lpPositionAddress } = await sdk.lp.depositLiquidity.execute({
   depositor:      wallet.publicKey,
   market:         new PublicKey(market.publicKey),
   underlyingMint: new PublicKey(USDC_MINT),
   lpMint:         new PublicKey(market.lpMint),
   lpVault:        new PublicKey(market.lpVault),
-  amount:         BigInt(100 * 1_000_000), // 100 USDC (6 decimals)
+  amount:         100_000_000n, // 100 USDC
 });
 ```
 
 ### Request withdrawal
 
+Single-shot: burns shares, redeems Kamino shortfall if needed, sends USDC back. All Kamino accounts are required even when no shortfall fires.
+
 ```typescript
 const { signature } = await sdk.lp.requestWithdrawal.execute({
-  owner:          wallet.publicKey,
-  market:         new PublicKey(market.publicKey),
+  withdrawer:    wallet.publicKey,
+  market:        new PublicKey(market.publicKey),
   underlyingMint: new PublicKey(USDC_MINT),
-  lpMint:         new PublicKey(market.lpMint),
-  lpVault:        new PublicKey(market.lpVault),
-  treasury:       new PublicKey(protocol.treasury),
-  sharesToBurn:   lpPosition.shares, // burn all shares
+  lpMint:        new PublicKey(market.lpMint),
+  lpVault:       new PublicKey(market.lpVault),
+  treasury:      new PublicKey(protocol.treasury),
+  sharesToBurn:  lpPosition.shares,
+  // Kamino redeem-on-shortfall accounts:
+  kaminoReserve, kaminoLendingMarket, kaminoLendingMarketAuthority,
+  reserveLiquidityMint, reserveLiquiditySupply, reserveCollateralMint,
+  collateralTokenProgram, liquidityTokenProgram,
+  preInstructions: [refresh],
+});
+```
+
+---
+
+## Trader operations
+
+### Open a swap
+
+```typescript
+import { SwapDirection } from "@anemone/sdk";
+
+const { signature, swapPositionAddress } = await sdk.trader.openSwap.execute({
+  trader:          wallet.publicKey,
+  market:          new PublicKey(market.publicKey),
+  underlyingMint:  new PublicKey(USDC_MINT),
+  treasury:        new PublicKey(protocol.treasury),
+  collateralVault: new PublicKey(market.collateralVault),
+  direction:       SwapDirection.PayFixed, // or ReceiveFixed
+  notional:        100_000_000n,            // 100 USDC
+  nonce:           1,                        // unique per (trader, market)
+  maxRateBps:      1500n,                    // PayFixed slippage cap
+  minRateBps:      0n,                       // ReceiveFixed slippage floor
+});
+```
+
+### Add collateral
+
+```typescript
+await sdk.trader.addCollateral.execute({
+  owner:           wallet.publicKey,
+  market:          new PublicKey(market.publicKey),
+  underlyingMint:  new PublicKey(USDC_MINT),
+  collateralVault: new PublicKey(market.collateralVault),
+  nonce:           1,
+  amount:          50_000_000n, // 50 USDC
+});
+```
+
+### Settle period
+
+Permissionless — anyone can call once `next_settlement_ts` has passed. Pays the period's PnL between `lp_vault` and `collateral_vault`.
+
+```typescript
+await sdk.trader.settlePeriod.execute({
+  caller:          wallet.publicKey,
+  market:          new PublicKey(market.publicKey),
+  swapPosition:    swapPositionAddress,
+  underlyingMint:  new PublicKey(USDC_MINT),
+  lpVault:         new PublicKey(market.lpVault),
+  collateralVault: new PublicKey(market.collateralVault),
+});
+```
+
+### Close early
+
+Pays the early-close fee + final MtM, releases remaining collateral.
+
+```typescript
+await sdk.trader.closePositionEarly.execute({
+  owner:           wallet.publicKey,
+  market:          new PublicKey(market.publicKey),
+  swapPosition:    swapPositionAddress,
+  underlyingMint:  new PublicKey(USDC_MINT),
+  lpVault:         new PublicKey(market.lpVault),
+  collateralVault: new PublicKey(market.collateralVault),
+  treasury:        new PublicKey(protocol.treasury),
+  // Kamino redeem-on-shortfall accounts:
+  kaminoReserve, kaminoLendingMarket, kaminoLendingMarketAuthority,
+  reserveLiquidityMint, reserveLiquiditySupply, reserveCollateralMint,
+  collateralTokenProgram, liquidityTokenProgram,
+  preInstructions: [refresh],
+});
+```
+
+### Claim matured
+
+Only valid after `maturity_timestamp`.
+
+```typescript
+await sdk.trader.claimMatured.execute({
+  owner:           wallet.publicKey,
+  market:          new PublicKey(market.publicKey),
+  swapPosition:    swapPositionAddress,
+  underlyingMint:  new PublicKey(USDC_MINT),
+  lpVault:         new PublicKey(market.lpVault),
+  collateralVault: new PublicKey(market.collateralVault),
+  // ...Kamino accounts as in closePositionEarly
+});
+```
+
+### Liquidate
+
+Permissionless — any underwater position (collateral < maintenance margin) can be liquidated. Liquidation fee splits 1/3 to treasury, 2/3 to liquidator.
+
+```typescript
+await sdk.trader.liquidatePosition.execute({
+  liquidator:      wallet.publicKey,
+  owner:           positionOwner,
+  market:          new PublicKey(market.publicKey),
+  swapPosition:    swapPositionAddress,
+  underlyingMint:  new PublicKey(USDC_MINT),
+  lpVault:         new PublicKey(market.lpVault),
+  collateralVault: new PublicKey(market.collateralVault),
+  treasury:        new PublicKey(protocol.treasury),
+  // ...Kamino accounts
 });
 ```
 
@@ -110,24 +242,54 @@ const { signature } = await sdk.lp.requestWithdrawal.execute({
 ```typescript
 const { signature, protocolStateAddress } = await sdk.admin.initializeProtocol.execute({
   authority: wallet.publicKey,
-  treasury:  treasuryPublicKey,
+  treasury:  treasuryAta,
   // fees are optional — defaults match the protocol spec
 });
 ```
 
-### Create a market
+### Create market
 
 ```typescript
-import { KAMINO_PROGRAM_ID, KAMINO_USDC_RESERVE, USDC_MINT, TENOR_30_DAYS, SECONDS_PER_DAY } from "@anemone/sdk";
-
 const { signature, marketAddress } = await sdk.admin.createMarket.execute({
-  authority:          wallet.publicKey,
-  underlyingReserve:  new PublicKey(KAMINO_USDC_RESERVE),
-  underlyingProtocol: new PublicKey(KAMINO_PROGRAM_ID),
-  underlyingMint:     new PublicKey(USDC_MINT),
-  tenorSeconds:       BigInt(TENOR_30_DAYS),
+  authority:           wallet.publicKey,
+  underlyingReserve:   new PublicKey(KAMINO_USDC_RESERVE),
+  underlyingProtocol:  new PublicKey(KAMINO_PROGRAM_ID),
+  underlyingMint:      new PublicKey(USDC_MINT),
+  kaminoCollateralMint: kaminoKUsdcMint, // = reserve.collateral.mint_pubkey
+  tenorSeconds:        BigInt(TENOR_30_DAYS),
   settlementPeriodSeconds: BigInt(SECONDS_PER_DAY),
-  // maxUtilizationBps, baseSpreadBps, maxLeverage are optional
+});
+```
+
+### Pause / unpause
+
+`paused` blocks new `open_swap` and `deposit_liquidity`. Settlements and closes still work.
+
+```typescript
+await sdk.admin.pauseProtocol.execute({ authority: wallet.publicKey });
+await sdk.admin.unpauseProtocol.execute({ authority: wallet.publicKey });
+```
+
+### Set keeper
+
+Rotate the address allowed to call `update_rate_index`, `deposit_to_kamino`, `withdraw_from_kamino`.
+
+```typescript
+await sdk.admin.setKeeper.execute({
+  authority: wallet.publicKey,
+  newKeeper: keeperBotPubkey,
+});
+```
+
+### Set rate index oracle (dev-tools only)
+
+Forces `market.current_rate_index` to a specific value. Only available in builds with the `dev-tools` feature flag (devnet/localnet/surfpool); excluded from mainnet builds. Used by tests to drive specific rate states; production uses `update_rate_index` reading from Kamino.
+
+```typescript
+await sdk.admin.setRateIndexOracle.execute({
+  authority:  wallet.publicKey,
+  market:     new PublicKey(market.publicKey),
+  rateIndex:  newIndexValue,
 });
 ```
 
@@ -135,42 +297,51 @@ const { signature, marketAddress } = await sdk.admin.createMarket.execute({
 
 ## Keeper operations
 
-The keeper is a bot that keeps market state fresh and manages Kamino capital deployment.
+The keeper bot keeps market state fresh and manages Kamino capital deployment.
 
 ```typescript
-import { KAMINO_USDC_RESERVE, TENOR_30_DAYS } from "@anemone/sdk";
-
-// Update the rate index from Kamino (run every ~5 minutes)
+// Pull Kamino's bsf into market.current_rate_index (cron every ~3 min)
 await sdk.keeper.updateRateIndex.execute({
+  keeper:            wallet.publicKey,
   underlyingReserve: new PublicKey(KAMINO_USDC_RESERVE),
   tenorSeconds:      BigInt(TENOR_30_DAYS),
   kaminoReserve:     new PublicKey(KAMINO_USDC_RESERVE),
+  preInstructions:   [refresh],
 });
 
-// Deploy idle LP capital to Kamino
+// Sync NAV — credits Kamino yield delta into lp_nav
+await sdk.keeper.syncKaminoYield.execute({
+  underlyingReserve: new PublicKey(KAMINO_USDC_RESERVE),
+  tenorSeconds:      BigInt(TENOR_30_DAYS),
+  kaminoReserve, kaminoLendingMarket,
+  pythOracle, switchboardPriceOracle, switchboardTwapOracle, scopePrices,
+  preInstructions:   [refresh],
+});
+
+// Move idle lp_vault USDC into Kamino to earn yield
 await sdk.keeper.depositToKamino.execute({
   keeper:            wallet.publicKey,
   underlyingReserve: new PublicKey(KAMINO_USDC_RESERVE),
   tenorSeconds:      BigInt(TENOR_30_DAYS),
-  amount:            amountToDeposit,
-  // ...kamino account addresses
+  amount:            500_000_000n,
+  // ...Kamino accounts
+  preInstructions:   [refresh],
 });
 
-// Redeem k-tokens back to USDC
+// Redeem k-tokens back to USDC (refill lp_vault before settlements)
 await sdk.keeper.withdrawFromKamino.execute({
-  keeper:           wallet.publicKey,
+  keeper:            wallet.publicKey,
   underlyingReserve: new PublicKey(KAMINO_USDC_RESERVE),
-  tenorSeconds:     BigInt(TENOR_30_DAYS),
-  collateralAmount: kTokenAmount,
-  // ...kamino account addresses
+  tenorSeconds:      BigInt(TENOR_30_DAYS),
+  collateralAmount:  kTokenAmount,
+  // ...Kamino accounts
+  preInstructions:   [refresh],
 });
 ```
 
 ---
 
 ## Constants
-
-All constants can be imported directly without instantiating `Anemone`:
 
 ```typescript
 import {
@@ -179,13 +350,19 @@ import {
   KAMINO_USDC_RESERVE,
   USDC_MINT,
   USDC_DECIMALS,
+  LP_MINT_DECIMALS,
   TENOR_30_DAYS,
   TENOR_90_DAYS,
   SECONDS_PER_DAY,
   DEFAULT_PROTOCOL_FEE_BPS,
   DEFAULT_OPENING_FEE_BPS,
+  DEFAULT_LIQUIDATION_FEE_BPS,
   DEFAULT_WITHDRAWAL_FEE_BPS,
+  DEFAULT_EARLY_CLOSE_FEE_BPS,
+  DEFAULT_MAX_UTILIZATION_BPS,
+  DEFAULT_BASE_SPREAD_BPS,
   BPS_DENOMINATOR,
+  KAMINO_MAX_STALE_SLOTS,
   SEEDS,
 } from "@anemone/sdk";
 ```
@@ -193,8 +370,6 @@ import {
 ---
 
 ## PDA derivation
-
-If you need to derive addresses manually:
 
 ```typescript
 import { PdaDeriver } from "@anemone/sdk";
@@ -211,6 +386,18 @@ const { address: lpPosition } = await PdaDeriver.lpPosition(
   ownerPublicKey,
   marketPublicKey
 );
+
+// Swap position: seeds are [b"swap", trader, market, nonce]
+const { address: swapPosition } = await PdaDeriver.swapPosition(
+  traderPublicKey,
+  marketPublicKey,
+  /* nonce */ 1
+);
+
+const { address: lpVault }         = await PdaDeriver.lpVault(marketPublicKey);
+const { address: collateralVault } = await PdaDeriver.collateralVault(marketPublicKey);
+const { address: lpMint }          = await PdaDeriver.lpMint(marketPublicKey);
+const { address: kaminoDeposit }   = await PdaDeriver.kaminoDepositAccount(marketPublicKey);
 ```
 
 ---
@@ -219,9 +406,38 @@ const { address: lpPosition } = await PdaDeriver.lpPosition(
 
 ```bash
 npm install
-npm test           # run unit tests
-npm run build      # compile to dist/
+npm test                # 99 unit tests (mocked program, IDL conformance)
+npm run test:e2e        # 37 E2E tests against surfpool — see e2e/README.md
+npm run build           # compile to dist/
+npx tsc --noEmit        # type-check only
 ```
+
+### E2E suite (surfpool)
+
+The E2E suite runs against [surfpool](https://github.com/txtx/surfpool), a mainnet-fork validator that lazily forks Kamino's USDC reserve, lending market, and Scope prices. See [e2e/README.md](e2e/README.md) for setup; the short version:
+
+```bash
+# In anemone/
+yarn surfpool          # start mainnet fork on 127.0.0.1:8899
+yarn ts-node scripts/setup-surfpool.ts  # deploy program + init protocol/market
+
+# In SDK/
+npm run test:e2e
+```
+
+15 files, 37 tests, ~15 minutes total runtime. Coverage:
+
+| Category | Files |
+|---|---|
+| Read-only queries | `protocol-read` |
+| LP lifecycle | `lp-lifecycle`, `kamino-deposit` |
+| Trader lifecycle | `swap-lifecycle`, `trader-collateral`, `settle-period`, `claim-matured`, `multi-settlement` |
+| Liquidation | `liquidation` (plumbing), `liquidation-positive` (1/3 vs 2/3 split), `liquidation-organic` (no forged state) |
+| Admin / keeper | `admin-lifecycle`, `keeper-ops` |
+| Negative paths | `negative-paths` (6 reverts) |
+| Pre-mainnet hardening | `pre-mainnet` (pause guards, keeper rotation, Token-2022, slippage) |
+
+The organic liquidation, multi-settlement, and pre-mainnet tests need the on-chain program built with the `dev-tools` feature so `set_rate_index_oracle` is exposed. Mainnet builds (`--no-default-features`) omit it.
 
 ---
 

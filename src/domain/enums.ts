@@ -5,8 +5,7 @@ export enum SwapDirection {
 
 export enum LpStatus {
   Active = 0,
-  PendingWithdrawal = 1,
-  Withdrawn = 2,
+  Withdrawn = 1,
 }
 
 export enum PositionStatus {

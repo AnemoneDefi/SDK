@@ -1,9 +1,9 @@
-import { Program } from "@coral-xyz/anchor";
+import type { AnemoneProgram } from "../../../infrastructure/anchor/AnemoneProgram";
+import { BN } from "@coral-xyz/anchor";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey, SystemProgram, TransactionSignature } from "@solana/web3.js";
 import {
   DEFAULT_BASE_SPREAD_BPS,
-  DEFAULT_MAX_LEVERAGE,
   DEFAULT_MAX_UTILIZATION_BPS,
   SECONDS_PER_DAY,
 } from "../../../constants";
@@ -14,11 +14,12 @@ export interface CreateMarketParams {
   underlyingReserve: PublicKey;
   underlyingProtocol: PublicKey;
   underlyingMint: PublicKey;
+  /** Kamino k-token mint (e.g. k-USDC). Used as mint for the kamino_deposit_account. */
+  kaminoCollateralMint: PublicKey;
   tenorSeconds?: bigint;
   settlementPeriodSeconds?: bigint;
   maxUtilizationBps?: number;
   baseSpreadBps?: number;
-  maxLeverage?: number;
 }
 
 export interface CreateMarketResult {
@@ -29,7 +30,7 @@ export interface CreateMarketResult {
 }
 
 export class CreateMarket {
-  constructor(private readonly program: Program) {}
+  constructor(private readonly program: AnemoneProgram) {}
 
   async execute(params: CreateMarketParams): Promise<CreateMarketResult> {
     const {
@@ -37,11 +38,11 @@ export class CreateMarket {
       underlyingReserve,
       underlyingProtocol,
       underlyingMint,
+      kaminoCollateralMint,
       tenorSeconds = BigInt(30 * SECONDS_PER_DAY),
       settlementPeriodSeconds = BigInt(SECONDS_PER_DAY),
       maxUtilizationBps = DEFAULT_MAX_UTILIZATION_BPS,
       baseSpreadBps = DEFAULT_BASE_SPREAD_BPS,
-      maxLeverage = DEFAULT_MAX_LEVERAGE,
     } = params;
 
     const { address: protocolState } = await PdaDeriver.protocol();
@@ -53,14 +54,15 @@ export class CreateMarket {
     const { address: collateralVault } =
       await PdaDeriver.collateralVault(market);
     const { address: lpMint } = await PdaDeriver.lpMint(market);
+    const { address: kaminoDepositAccount } =
+      await PdaDeriver.kaminoDepositAccount(market);
 
-    const signature = await (this.program.methods as any)
+    const signature = await this.program.methods
       .createMarket(
-        tenorSeconds,
-        settlementPeriodSeconds,
+        new BN(tenorSeconds.toString()),
+        new BN(settlementPeriodSeconds.toString()),
         maxUtilizationBps,
-        baseSpreadBps,
-        maxLeverage
+        baseSpreadBps
       )
       .accountsStrict({
         protocolState,
@@ -68,6 +70,8 @@ export class CreateMarket {
         lpVault,
         collateralVault,
         lpMint,
+        kaminoDepositAccount,
+        kaminoCollateralMint,
         underlyingReserve,
         underlyingProtocol,
         underlyingMint,

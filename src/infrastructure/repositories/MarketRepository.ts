@@ -1,9 +1,11 @@
-import { Program } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { Market } from "../../domain/entities/Market";
 import { MarketStatus } from "../../domain/enums";
 import { IMarketRepository } from "../../domain/repositories/IMarketRepository";
-import { PROGRAM_PUBLIC_KEY } from "../anchor/AnemoneProgram";
+import {
+  PROGRAM_PUBLIC_KEY,
+  type AnemoneProgram,
+} from "../anchor/AnemoneProgram";
 import { PdaDeriver } from "../pda/PdaDeriver";
 
 function rawToMarket(address: PublicKey, raw: any): Market {
@@ -21,23 +23,26 @@ function rawToMarket(address: PublicKey, raw: any): Market {
     settlementPeriodSeconds: BigInt(raw.settlementPeriodSeconds.toString()),
     maxUtilizationBps: raw.maxUtilizationBps,
     baseSpreadBps: raw.baseSpreadBps,
-    maxLeverage: raw.maxLeverage,
-    totalLpDeposits: BigInt(raw.totalLpDeposits.toString()),
+    lpNav: BigInt(raw.lpNav.toString()),
     totalLpShares: BigInt(raw.totalLpShares.toString()),
     totalFixedNotional: BigInt(raw.totalFixedNotional.toString()),
     totalVariableNotional: BigInt(raw.totalVariableNotional.toString()),
-    pendingWithdrawals: BigInt(raw.pendingWithdrawals.toString()),
+    previousRateIndex: BigInt(raw.previousRateIndex.toString()),
+    previousRateUpdateTs: BigInt(raw.previousRateUpdateTs.toString()),
     currentRateIndex: BigInt(raw.currentRateIndex.toString()),
     lastRateUpdateTs: BigInt(raw.lastRateUpdateTs.toString()),
     cumulativeFeesEarned: BigInt(raw.cumulativeFeesEarned.toString()),
     totalOpenPositions: BigInt(raw.totalOpenPositions.toString()),
+    totalKaminoCollateral: BigInt(raw.totalKaminoCollateral.toString()),
+    lastKaminoSnapshotUsdc: BigInt(raw.lastKaminoSnapshotUsdc.toString()),
+    lastKaminoSyncTs: BigInt(raw.lastKaminoSyncTs.toString()),
     status: raw.status as MarketStatus,
     bump: raw.bump,
   };
 }
 
 export class MarketRepository implements IMarketRepository {
-  constructor(private readonly program: Program) {}
+  constructor(private readonly program: AnemoneProgram) {}
 
   async fetchByAddress(address: string): Promise<Market | null> {
     try {

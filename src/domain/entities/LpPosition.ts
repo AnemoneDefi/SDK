@@ -8,7 +8,5 @@ export interface LpPosition {
   shares: bigint;
   depositedAmount: bigint;
   status: LpStatus;
-  withdrawalRequestedAt: bigint;
-  withdrawalAmount: bigint;
   bump: number;
 }

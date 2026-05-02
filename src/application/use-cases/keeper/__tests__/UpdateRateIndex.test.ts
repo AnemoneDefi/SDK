@@ -6,6 +6,10 @@ vi.mock("../../../../infrastructure/pda/PdaDeriver", () => {
   const { PublicKey } = require("@solana/web3.js");
   return {
     PdaDeriver: {
+      protocol: vi.fn().mockResolvedValue({
+        address: new PublicKey("So11111111111111111111111111111111111111119"),
+        bump: 254,
+      }),
       market: vi.fn().mockResolvedValue({
         address: new PublicKey("So11111111111111111111111111111111111111112"),
         bump: 253,
@@ -25,6 +29,7 @@ function buildProgramMock(rpcFn: ReturnType<typeof vi.fn>) {
 }
 
 describe("UpdateRateIndex", () => {
+  const keeper = new PublicKey("So11111111111111111111111111111111111111114");
   const underlyingReserve = new PublicKey(
     "D6q6wuQSrifJKZYpR1M8R4YawnLDtDsMmWM1NbBmgJ59"
   );
@@ -42,6 +47,7 @@ describe("UpdateRateIndex", () => {
     const useCase = new UpdateRateIndex(program);
 
     const result = await useCase.execute({
+      keeper,
       underlyingReserve,
       tenorSeconds,
       kaminoReserve,
@@ -57,7 +63,12 @@ describe("UpdateRateIndex", () => {
     const program = buildProgramMock(rpcMock);
     const useCase = new UpdateRateIndex(program);
 
-    await useCase.execute({ underlyingReserve, tenorSeconds, kaminoReserve });
+    await useCase.execute({
+      keeper,
+      underlyingReserve,
+      tenorSeconds,
+      kaminoReserve,
+    });
 
     expect(PdaDeriver.market).toHaveBeenCalledWith(
       underlyingReserve,
@@ -69,7 +80,12 @@ describe("UpdateRateIndex", () => {
     const program = buildProgramMock(rpcMock);
     const useCase = new UpdateRateIndex(program);
 
-    await useCase.execute({ underlyingReserve, tenorSeconds, kaminoReserve });
+    await useCase.execute({
+      keeper,
+      underlyingReserve,
+      tenorSeconds,
+      kaminoReserve,
+    });
 
     expect(program.methods.updateRateIndex).toHaveBeenCalledWith();
   });
@@ -80,7 +96,12 @@ describe("UpdateRateIndex", () => {
     const useCase = new UpdateRateIndex(program);
 
     await expect(
-      useCase.execute({ underlyingReserve, tenorSeconds, kaminoReserve })
+      useCase.execute({
+        keeper,
+        underlyingReserve,
+        tenorSeconds,
+        kaminoReserve,
+      })
     ).rejects.toThrow("stale oracle");
   });
 });
