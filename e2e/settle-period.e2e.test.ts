@@ -169,6 +169,7 @@ describe("E2E: settle_period on short-tenor market through SDK", () => {
       underlyingMint: ctx.underlyingMint,
       lpVault: shortMarket.lpVaultPda,
       collateralVault: shortMarket.collateralVaultPda,
+        treasury: ctx.treasury,
     });
 
     const after = await ctx.sdk.query.positions.fetchSwapPosition(

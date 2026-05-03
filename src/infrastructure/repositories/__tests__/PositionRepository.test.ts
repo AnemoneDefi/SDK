@@ -34,6 +34,7 @@ const RAW_SWAP = {
   direction: SwapDirection.PayFixed,
   notional: new BN(10_000_000),
   fixedRateBps: new BN(490),
+  spreadBpsAtOpen: new BN(80),
   collateralDeposited: new BN(50_000),
   collateralRemaining: new BN(45_000),
   entryRateIndex: new BN(456),

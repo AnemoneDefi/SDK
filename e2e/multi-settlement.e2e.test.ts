@@ -256,6 +256,7 @@ describe("E2E: multi-settlement with unpaid_pnl catchup (H1 path)", () => {
       underlyingMint: ctx.underlyingMint,
       lpVault: kMarket.lpVaultPda,
       collateralVault: kMarket.collateralVaultPda,
+        treasury: ctx.treasury,
     });
 
     const afterFirst = await ctx.sdk.query.positions.fetchSwapPosition(
@@ -326,6 +327,7 @@ describe("E2E: multi-settlement with unpaid_pnl catchup (H1 path)", () => {
       underlyingMint: ctx.underlyingMint,
       lpVault: kMarket.lpVaultPda,
       collateralVault: kMarket.collateralVaultPda,
+        treasury: ctx.treasury,
     });
 
     const afterSecond = await ctx.sdk.query.positions.fetchSwapPosition(

@@ -7,6 +7,8 @@ export interface SwapPosition {
   direction: SwapDirection;
   notional: bigint;
   fixedRateBps: bigint;
+  /** Spread bps charged at open — needed to compute the protocol fee skim on each settle. */
+  spreadBpsAtOpen: bigint;
   collateralDeposited: bigint;
   collateralRemaining: bigint;
   entryRateIndex: bigint;

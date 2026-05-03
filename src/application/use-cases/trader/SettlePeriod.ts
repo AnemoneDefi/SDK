@@ -1,6 +1,7 @@
 import type { AnemoneProgram } from "../../../infrastructure/anchor/AnemoneProgram";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey, TransactionSignature } from "@solana/web3.js";
+import { PdaDeriver } from "../../../infrastructure/pda/PdaDeriver";
 
 export interface SettlePeriodParams {
   caller: PublicKey;
@@ -9,6 +10,8 @@ export interface SettlePeriodParams {
   underlyingMint: PublicKey;
   lpVault: PublicKey;
   collateralVault: PublicKey;
+  /** Treasury — receives the protocol fee skimmed from each settlement. */
+  treasury: PublicKey;
 }
 
 export interface SettlePeriodResult {
@@ -26,15 +29,20 @@ export class SettlePeriod {
       underlyingMint,
       lpVault,
       collateralVault,
+      treasury,
     } = params;
+
+    const { address: protocolState } = await PdaDeriver.protocol();
 
     const signature = await this.program.methods
       .settlePeriod()
       .accountsStrict({
+        protocolState,
         market,
         swapPosition,
         lpVault,
         collateralVault,
+        treasury,
         underlyingMint,
         caller,
         tokenProgram: TOKEN_PROGRAM_ID,

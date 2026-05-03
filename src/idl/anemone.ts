@@ -181,6 +181,12 @@ export type Anemone = {
         },
         {
           "name": "kaminoReserve",
+          "docs": [
+            "Kamino reserve — typed as AccountLoader so we can read live exchange",
+            "rate fields needed to convert the USDC shortfall into a k-USDC",
+            "collateral amount before invoking `redeem_reserve_collateral`",
+            "(Finding 10 fix). The CPI also writes to it, hence `mut`."
+          ],
           "writable": true
         },
         {
@@ -336,6 +342,11 @@ export type Anemone = {
         },
         {
           "name": "kaminoReserve",
+          "docs": [
+            "Kamino reserve — typed as AccountLoader so the handler can read the",
+            "live exchange rate to convert USDC shortfall into k-USDC collateral",
+            "before invoking `redeem_reserve_collateral` (Finding 10 fix)."
+          ],
           "writable": true
         },
         {
@@ -1088,13 +1099,10 @@ export type Anemone = {
         {
           "name": "treasury",
           "docs": [
-            "Treasury — receives the protocol's share of the liquidation fee (1/3",
-            "of the total). Same address as `protocol_state.treasury`."
+            "Treasury — receives the protocol's share of the liquidation fee",
+            "(1/3 of the total). Same address as `protocol_state.treasury`."
           ],
-          "writable": true,
-          "relations": [
-            "protocolState"
-          ]
+          "writable": true
         },
         {
           "name": "underlyingMint",
@@ -1120,6 +1128,11 @@ export type Anemone = {
         },
         {
           "name": "kaminoReserve",
+          "docs": [
+            "Kamino reserve — typed as AccountLoader so the handler can read the",
+            "live exchange rate to convert USDC shortfall into k-USDC collateral",
+            "before invoking `redeem_reserve_collateral` (Finding 10 fix)."
+          ],
           "writable": true
         },
         {
@@ -1289,6 +1302,78 @@ export type Anemone = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "pauseMarket",
+      "discriminator": [
+        216,
+        238,
+        4,
+        164,
+        65,
+        11,
+        162,
+        91
+      ],
+      "accounts": [
+        {
+          "name": "protocolState",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market.underlying_reserve",
+                "account": "swapMarket"
+              },
+              {
+                "kind": "account",
+                "path": "market.tenor_seconds",
+                "account": "swapMarket"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "protocolState"
+          ]
+        }
+      ],
+      "args": []
     },
     {
       "name": "pauseProtocol",
@@ -1474,6 +1559,13 @@ export type Anemone = {
         },
         {
           "name": "kaminoReserve",
+          "docs": [
+            "Kamino reserve — must match `market.underlying_reserve`. Typed as",
+            "AccountLoader so we can read the live exchange rate fields needed to",
+            "convert the requested USDC shortfall into a k-USDC collateral amount",
+            "before invoking `redeem_reserve_collateral`. The CPI also writes back",
+            "to the reserve, hence `mut`."
+          ],
           "writable": true
         },
         {
@@ -1661,6 +1753,26 @@ export type Anemone = {
       ],
       "accounts": [
         {
+          "name": "protocolState",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
           "name": "market",
           "writable": true,
           "pda": {
@@ -1703,9 +1815,21 @@ export type Anemone = {
         {
           "name": "collateralVault",
           "docs": [
-            "Collateral vault — holds trader margin"
+            "Collateral vault — holds trader margin and the protocol-fee source"
           ],
           "writable": true
+        },
+        {
+          "name": "treasury",
+          "docs": [
+            "Treasury — receives the per-period protocol fee on the spread leg.",
+            "Same address as `protocol_state.treasury`; mint must match the",
+            "market's underlying mint."
+          ],
+          "writable": true,
+          "relations": [
+            "protocolState"
+          ]
         },
         {
           "name": "underlyingMint",
@@ -1808,6 +1932,78 @@ export type Anemone = {
         },
         {
           "name": "tokenProgram"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "unpauseMarket",
+      "discriminator": [
+        219,
+        203,
+        199,
+        170,
+        212,
+        45,
+        170,
+        80
+      ],
+      "accounts": [
+        {
+          "name": "protocolState",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "market",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  97,
+                  114,
+                  107,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "market.underlying_reserve",
+                "account": "swapMarket"
+              },
+              {
+                "kind": "account",
+                "path": "market.tenor_seconds",
+                "account": "swapMarket"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "signer": true,
+          "relations": [
+            "protocolState"
+          ]
         }
       ],
       "args": []
@@ -3238,10 +3434,6 @@ export type Anemone = {
             "type": "i64"
           },
           {
-            "name": "cumulativeFeesEarned",
-            "type": "u64"
-          },
-          {
             "name": "totalOpenPositions",
             "type": "u64"
           },
@@ -3308,6 +3500,17 @@ export type Anemone = {
           },
           {
             "name": "fixedRateBps",
+            "type": "u64"
+          },
+          {
+            "name": "spreadBpsAtOpen",
+            "docs": [
+              "Spread component locked into `fixed_rate_bps` at open time. The",
+              "quoted rate is `current_apy_bps ± spread_bps`; storing the spread",
+              "separately lets `settle_period` charge the protocol fee against the",
+              "deterministic spread payment regardless of which direction the",
+              "variable rate moved (Finding 11 follow-up — protocol_fee_bps wiring)."
+            ],
             "type": "u64"
           },
           {
