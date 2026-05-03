@@ -58,6 +58,7 @@ function rawToSwapPosition(address: PublicKey, raw: any): SwapPosition {
     direction: decodeSwapDirection(raw.direction),
     notional: BigInt(raw.notional.toString()),
     fixedRateBps: BigInt(raw.fixedRateBps.toString()),
+    spreadBpsAtOpen: BigInt(raw.spreadBpsAtOpen.toString()),
     collateralDeposited: BigInt(raw.collateralDeposited.toString()),
     collateralRemaining: BigInt(raw.collateralRemaining.toString()),
     entryRateIndex: BigInt(raw.entryRateIndex.toString()),

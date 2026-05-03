@@ -273,6 +273,7 @@ describe("E2E: negative paths through SDK", () => {
         underlyingMint: ctx.underlyingMint,
         lpVault: shortMarket.lpVaultPda,
         collateralVault: shortMarket.collateralVaultPda,
+        treasury: ctx.treasury,
       }),
       "SettlementNotDue"
     );

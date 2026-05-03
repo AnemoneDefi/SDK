@@ -369,7 +369,10 @@ describe("IDL conformance — coverage", () => {
 
     // These instructions are TRACKED but not yet implemented (Phase 4 of the
     // refactor plan). Update this list as use-cases land.
-    const TRACKED_MISSING: string[] = [];
+    // pauseMarket / unpauseMarket exist in the program but aren't yet wrapped
+    // by the SDK. Per-market pause is operational tooling; protocol-wide
+    // pauseProtocol covers the killswitch case for now.
+    const TRACKED_MISSING: string[] = ["pauseMarket", "unpauseMarket"];
 
     expect(missing.sort()).toEqual(TRACKED_MISSING);
   });

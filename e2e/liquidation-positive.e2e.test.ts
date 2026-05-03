@@ -88,9 +88,10 @@ async function openSwapAsTrader(
 //   72  direction (1, enum)
 //   73  notional (8, u64)
 //   81  fixed_rate_bps (8, u64)
-//   89  collateral_deposited (8, u64)
-//   97  collateral_remaining (8, u64)   ← target
-const COLLATERAL_REMAINING_OFFSET = 97;
+//   89  spread_bps_at_open (8, u64)   ← added in PR #32 (protocol-fee-on-spread)
+//   97  collateral_deposited (8, u64)
+//   105 collateral_remaining (8, u64) ← target
+const COLLATERAL_REMAINING_OFFSET = 105;
 
 describe("E2E: liquidation positive path (forced underwater)", () => {
   let ctx: BootstrapResult | null = null;

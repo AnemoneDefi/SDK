@@ -185,6 +185,7 @@ describe("E2E: claim_matured on short-tenor market through SDK", () => {
       underlyingMint: ctx.underlyingMint,
       lpVault: shortMarket.lpVaultPda,
       collateralVault: shortMarket.collateralVaultPda,
+        treasury: ctx.treasury,
     });
 
     const matured = await ctx.sdk.query.positions.fetchSwapPosition(

@@ -23,7 +23,6 @@ export interface Market {
   previousRateUpdateTs: bigint;
   currentRateIndex: bigint;
   lastRateUpdateTs: bigint;
-  cumulativeFeesEarned: bigint;
   totalOpenPositions: bigint;
   totalKaminoCollateral: bigint;
   /** Last known USDC value of the k-tokens in `kaminoDepositAccount`. */

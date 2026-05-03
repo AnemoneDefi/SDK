@@ -31,7 +31,6 @@ function rawToMarket(address: PublicKey, raw: any): Market {
     previousRateUpdateTs: BigInt(raw.previousRateUpdateTs.toString()),
     currentRateIndex: BigInt(raw.currentRateIndex.toString()),
     lastRateUpdateTs: BigInt(raw.lastRateUpdateTs.toString()),
-    cumulativeFeesEarned: BigInt(raw.cumulativeFeesEarned.toString()),
     totalOpenPositions: BigInt(raw.totalOpenPositions.toString()),
     totalKaminoCollateral: BigInt(raw.totalKaminoCollateral.toString()),
     lastKaminoSnapshotUsdc: BigInt(raw.lastKaminoSnapshotUsdc.toString()),
