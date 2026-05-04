@@ -41,7 +41,13 @@ export interface AnemoneConfig {
 }
 
 export class Anemone {
-  private readonly program: AnemoneProgram;
+  /**
+   * Underlying Anchor program — exposed for advanced consumers that need to
+   * build raw `TransactionInstruction`s (e.g. bundling sync_kamino_yield as a
+   * preInstruction to a deposit). Use the typed namespaces (`query`, `lp`, …)
+   * for normal flows.
+   */
+  readonly program: AnemoneProgram;
 
   /** Read-only queries: protocol, markets, positions */
   readonly query: AnemoneQuery;
