@@ -289,7 +289,9 @@ describe("E2E: pre-mainnet hardening through SDK", () => {
           new BN(ATTEMPT_TENOR.toString()),
           new BN(60),
           6_000,
-          80
+          80,
+          new BN("18446744073709551615"),
+          new BN("18446744073709551615")
         )
         .accountsStrict({
           protocolState: ctx.protocolStatePda,

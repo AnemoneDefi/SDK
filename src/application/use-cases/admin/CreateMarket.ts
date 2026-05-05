@@ -20,6 +20,9 @@ export interface CreateMarketParams {
   settlementPeriodSeconds?: bigint;
   maxUtilizationBps?: number;
   baseSpreadBps?: number;
+  /** v0.1 mainnet caps. Default to u64::MAX (effectively disabled). */
+  maxLpNav?: bigint;
+  maxPositionNotional?: bigint;
 }
 
 export interface CreateMarketResult {
@@ -43,6 +46,8 @@ export class CreateMarket {
       settlementPeriodSeconds = BigInt(SECONDS_PER_DAY),
       maxUtilizationBps = DEFAULT_MAX_UTILIZATION_BPS,
       baseSpreadBps = DEFAULT_BASE_SPREAD_BPS,
+      maxLpNav = (1n << 64n) - 1n,
+      maxPositionNotional = (1n << 64n) - 1n,
     } = params;
 
     const { address: protocolState } = await PdaDeriver.protocol();
@@ -62,7 +67,9 @@ export class CreateMarket {
         new BN(tenorSeconds.toString()),
         new BN(settlementPeriodSeconds.toString()),
         maxUtilizationBps,
-        baseSpreadBps
+        baseSpreadBps,
+        new BN(maxLpNav.toString()),
+        new BN(maxPositionNotional.toString())
       )
       .accountsStrict({
         protocolState,
