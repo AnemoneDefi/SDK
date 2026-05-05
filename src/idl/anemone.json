@@ -1,10 +1,4 @@
-/**
- * Program IDL in camelCase format in order to be used in JS/TS.
- *
- * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/anemone.json`.
- */
-export type Anemone = {
+{
   "address": "KQs6ci5FtedFKPVJThAZSMMXyosK4TvnF7kcDSx5Jwd",
   "metadata": {
     "name": "anemone",
@@ -14,7 +8,7 @@ export type Anemone = {
   },
   "instructions": [
     {
-      "name": "addCollateral",
+      "name": "add_collateral",
       "discriminator": [
         127,
         82,
@@ -44,35 +38,35 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "swapPosition",
+          "name": "swap_position",
           "writable": true
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault — destination of the added USDC"
           ],
           "writable": true
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC)"
           ]
         },
         {
-          "name": "ownerTokenAccount",
+          "name": "owner_token_account",
           "docs": [
             "Owner's token account — source of the added collateral"
           ],
@@ -84,7 +78,7 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         }
       ],
       "args": [
@@ -95,7 +89,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "claimMatured",
+      "name": "claim_matured",
       "discriminator": [
         153,
         42,
@@ -126,43 +120,43 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "swapPosition",
+          "name": "swap_position",
           "writable": true
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault — source of any unpaid_pnl catchup before claim."
           ],
           "writable": true
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault — source of the matured collateral"
           ],
           "writable": true
         },
         {
-          "name": "ownerTokenAccount",
+          "name": "owner_token_account",
           "docs": [
             "Owner's token account — receives collateral_remaining"
           ],
           "writable": true
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC)"
           ]
@@ -173,14 +167,14 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "writable": true
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino reserve — typed as AccountLoader so we can read live exchange",
             "rate fields needed to convert the USDC shortfall into a k-USDC",
@@ -190,39 +184,39 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "kaminoLendingMarket"
+          "name": "kamino_lending_market"
         },
         {
-          "name": "kaminoLendingMarketAuthority"
+          "name": "kamino_lending_market_authority"
         },
         {
-          "name": "reserveLiquidityMint"
+          "name": "reserve_liquidity_mint"
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "collateralTokenProgram"
+          "name": "collateral_token_program"
         },
         {
-          "name": "liquidityTokenProgram"
+          "name": "liquidity_token_program"
         },
         {
-          "name": "instructionSysvarAccount"
+          "name": "instruction_sysvar_account"
         },
         {
-          "name": "kaminoProgram"
+          "name": "kamino_program"
         }
       ],
       "args": []
     },
     {
-      "name": "closePositionEarly",
+      "name": "close_position_early",
       "discriminator": [
         43,
         56,
@@ -235,7 +229,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -273,29 +267,29 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "swapPosition",
+          "name": "swap_position",
           "writable": true
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault — source/dest for mark-to-market PnL settlement"
           ],
           "writable": true
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault — holds the trader margin"
           ],
@@ -308,17 +302,17 @@ export type Anemone = {
           ],
           "writable": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC)"
           ]
         },
         {
-          "name": "ownerTokenAccount",
+          "name": "owner_token_account",
           "docs": [
             "Owner's token account — receives remainder after fee"
           ],
@@ -330,18 +324,18 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "writable": true
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino reserve — typed as AccountLoader so the handler can read the",
             "live exchange rate to convert USDC shortfall into k-USDC collateral",
@@ -350,39 +344,39 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "kaminoLendingMarket"
+          "name": "kamino_lending_market"
         },
         {
-          "name": "kaminoLendingMarketAuthority"
+          "name": "kamino_lending_market_authority"
         },
         {
-          "name": "reserveLiquidityMint"
+          "name": "reserve_liquidity_mint"
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "collateralTokenProgram"
+          "name": "collateral_token_program"
         },
         {
-          "name": "liquidityTokenProgram"
+          "name": "liquidity_token_program"
         },
         {
-          "name": "instructionSysvarAccount"
+          "name": "instruction_sysvar_account"
         },
         {
-          "name": "kaminoProgram"
+          "name": "kamino_program"
         }
       ],
       "args": []
     },
     {
-      "name": "createMarket",
+      "name": "create_market",
       "discriminator": [
         103,
         226,
@@ -395,7 +389,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "writable": true,
           "pda": {
             "seeds": [
@@ -433,17 +427,17 @@ export type Anemone = {
               },
               {
                 "kind": "account",
-                "path": "underlyingReserve"
+                "path": "underlying_reserve"
               },
               {
                 "kind": "arg",
-                "path": "tenorSeconds"
+                "path": "tenor_seconds"
               }
             ]
           }
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault: holds USDC in transit during settlements"
           ],
@@ -471,7 +465,7 @@ export type Anemone = {
           }
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault: holds trader collateral"
           ],
@@ -507,7 +501,7 @@ export type Anemone = {
           }
         },
         {
-          "name": "lpMint",
+          "name": "lp_mint",
           "docs": [
             "LP token mint: receipt tokens for liquidity providers"
           ],
@@ -534,7 +528,7 @@ export type Anemone = {
           }
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "docs": [
             "Kamino deposit account: holds k-tokens (collateral from Kamino deposits)"
           ],
@@ -568,25 +562,25 @@ export type Anemone = {
           }
         },
         {
-          "name": "kaminoCollateralMint",
+          "name": "kamino_collateral_mint",
           "docs": [
             "The Kamino collateral mint (k-token, e.g. k-USDC)"
           ]
         },
         {
-          "name": "underlyingReserve",
+          "name": "underlying_reserve",
           "docs": [
             "The lending protocol's reserve account (e.g. Kamino USDC Reserve)"
           ]
         },
         {
-          "name": "underlyingProtocol",
+          "name": "underlying_protocol",
           "docs": [
             "The lending protocol's program ID (e.g. Kamino K-Lend program)"
           ]
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The token mint for this market (e.g. USDC mint)"
           ]
@@ -596,46 +590,46 @@ export type Anemone = {
           "writable": true,
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         }
       ],
       "args": [
         {
-          "name": "tenorSeconds",
+          "name": "tenor_seconds",
           "type": "i64"
         },
         {
-          "name": "settlementPeriodSeconds",
+          "name": "settlement_period_seconds",
           "type": "i64"
         },
         {
-          "name": "maxUtilizationBps",
+          "name": "max_utilization_bps",
           "type": "u16"
         },
         {
-          "name": "baseSpreadBps",
+          "name": "base_spread_bps",
           "type": "u16"
         },
         {
-          "name": "maxLpNav",
+          "name": "max_lp_nav",
           "type": "u64"
         },
         {
-          "name": "maxPositionNotional",
+          "name": "max_position_notional",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "depositLiquidity",
+      "name": "deposit_liquidity",
       "discriminator": [
         245,
         99,
@@ -648,7 +642,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -686,18 +680,18 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "lpPosition",
+          "name": "lp_position",
           "writable": true,
           "pda": {
             "seeds": [
@@ -720,34 +714,34 @@ export type Anemone = {
           }
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault — PDA-controlled token account that holds USDC"
           ],
           "writable": true
         },
         {
-          "name": "lpMint",
+          "name": "lp_mint",
           "docs": [
             "LP token mint — program mints shares to depositor"
           ],
           "writable": true
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC) — needed for transfer_checked"
           ]
         },
         {
-          "name": "depositorTokenAccount",
+          "name": "depositor_token_account",
           "docs": [
             "Depositor's USDC token account (source of funds)"
           ],
           "writable": true
         },
         {
-          "name": "depositorLpTokenAccount",
+          "name": "depositor_lp_token_account",
           "docs": [
             "Depositor's LP token account (receives minted shares). Auto-init for",
             "first-time depositors so the frontend doesn't have to bundle a separate",
@@ -762,11 +756,11 @@ export type Anemone = {
               },
               {
                 "kind": "account",
-                "path": "tokenProgram"
+                "path": "token_program"
               },
               {
                 "kind": "account",
-                "path": "lpMint"
+                "path": "lp_mint"
               }
             ],
             "program": {
@@ -814,14 +808,14 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "associatedTokenProgram",
+          "name": "associated_token_program",
           "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -833,7 +827,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "depositToKamino",
+      "name": "deposit_to_kamino",
       "discriminator": [
         107,
         90,
@@ -846,7 +840,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -888,89 +882,89 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "Our LP vault — source of USDC"
           ],
           "writable": true
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "docs": [
             "Our kamino deposit account — receives k-tokens"
           ],
           "writable": true
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino Reserve (e.g. USDC Reserve)"
           ],
           "writable": true
         },
         {
-          "name": "kaminoLendingMarket",
+          "name": "kamino_lending_market",
           "docs": [
             "Kamino LendingMarket"
           ]
         },
         {
-          "name": "kaminoLendingMarketAuthority",
+          "name": "kamino_lending_market_authority",
           "docs": [
             "Kamino LendingMarket authority PDA"
           ]
         },
         {
-          "name": "reserveLiquidityMint",
+          "name": "reserve_liquidity_mint",
           "docs": [
             "USDC mint (reserve liquidity mint)"
           ]
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "docs": [
             "Kamino's USDC vault"
           ],
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "docs": [
             "k-USDC mint (reserve collateral mint)"
           ],
           "writable": true
         },
         {
-          "name": "collateralTokenProgram",
+          "name": "collateral_token_program",
           "docs": [
             "Token program for k-tokens"
           ]
         },
         {
-          "name": "liquidityTokenProgram",
+          "name": "liquidity_token_program",
           "docs": [
             "Token program for USDC"
           ]
         },
         {
-          "name": "instructionSysvarAccount",
+          "name": "instruction_sysvar_account",
           "docs": [
             "Instructions sysvar"
           ]
         },
         {
-          "name": "kaminoProgram",
+          "name": "kamino_program",
           "docs": [
             "Kamino K-Lend program — must match market.underlying_protocol"
           ]
@@ -984,7 +978,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "initializeProtocol",
+      "name": "initialize_protocol",
       "discriminator": [
         188,
         233,
@@ -997,7 +991,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "writable": true,
           "pda": {
             "seeds": [
@@ -1034,35 +1028,35 @@ export type Anemone = {
           ]
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "protocolFeeBps",
+          "name": "protocol_fee_bps",
           "type": "u16"
         },
         {
-          "name": "openingFeeBps",
+          "name": "opening_fee_bps",
           "type": "u16"
         },
         {
-          "name": "liquidationFeeBps",
+          "name": "liquidation_fee_bps",
           "type": "u16"
         },
         {
-          "name": "withdrawalFeeBps",
+          "name": "withdrawal_fee_bps",
           "type": "u16"
         },
         {
-          "name": "earlyCloseFeeBps",
+          "name": "early_close_fee_bps",
           "type": "u16"
         }
       ]
     },
     {
-      "name": "liquidatePosition",
+      "name": "liquidate_position",
       "discriminator": [
         187,
         74,
@@ -1075,7 +1069,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1113,29 +1107,29 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "swapPosition",
+          "name": "swap_position",
           "writable": true
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault — source/dest for mark-to-market PnL settled on liquidation"
           ],
           "writable": true
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault — source of fee + remainder, and dest/source for MtM"
           ],
@@ -1149,14 +1143,14 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "ownerTokenAccount",
+          "name": "owner_token_account",
           "docs": [
             "Owner's token account — receives remainder after liquidation fee"
           ],
           "writable": true
         },
         {
-          "name": "liquidatorTokenAccount",
+          "name": "liquidator_token_account",
           "docs": [
             "Liquidator's token account — receives the liquidator's share of the",
             "liquidation fee (2/3 of the total)."
@@ -1172,7 +1166,7 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC)"
           ]
@@ -1187,14 +1181,14 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "writable": true
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino reserve — typed as AccountLoader so the handler can read the",
             "live exchange rate to convert USDC shortfall into k-USDC collateral",
@@ -1203,39 +1197,39 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "kaminoLendingMarket"
+          "name": "kamino_lending_market"
         },
         {
-          "name": "kaminoLendingMarketAuthority"
+          "name": "kamino_lending_market_authority"
         },
         {
-          "name": "reserveLiquidityMint"
+          "name": "reserve_liquidity_mint"
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "collateralTokenProgram"
+          "name": "collateral_token_program"
         },
         {
-          "name": "liquidityTokenProgram"
+          "name": "liquidity_token_program"
         },
         {
-          "name": "instructionSysvarAccount"
+          "name": "instruction_sysvar_account"
         },
         {
-          "name": "kaminoProgram"
+          "name": "kamino_program"
         }
       ],
       "args": []
     },
     {
-      "name": "openSwap",
+      "name": "open_swap",
       "discriminator": [
         109,
         109,
@@ -1248,7 +1242,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1286,22 +1280,22 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "swapPosition",
+          "name": "swap_position",
           "writable": true
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault — holds trader margin deposits"
           ],
@@ -1314,17 +1308,17 @@ export type Anemone = {
           ],
           "writable": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC)"
           ]
         },
         {
-          "name": "traderTokenAccount",
+          "name": "trader_token_account",
           "docs": [
             "Trader's token account (source of collateral + fee)"
           ],
@@ -1336,10 +1330,10 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -1348,7 +1342,7 @@ export type Anemone = {
           "name": "direction",
           "type": {
             "defined": {
-              "name": "swapDirection"
+              "name": "SwapDirection"
             }
           }
         },
@@ -1361,17 +1355,17 @@ export type Anemone = {
           "type": "u8"
         },
         {
-          "name": "maxRateBps",
+          "name": "max_rate_bps",
           "type": "u64"
         },
         {
-          "name": "minRateBps",
+          "name": "min_rate_bps",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "pauseMarket",
+      "name": "pause_market",
       "discriminator": [
         216,
         238,
@@ -1384,7 +1378,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1422,12 +1416,12 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
@@ -1436,14 +1430,14 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": []
     },
     {
-      "name": "pauseProtocol",
+      "name": "pause_protocol",
       "discriminator": [
         144,
         95,
@@ -1456,7 +1450,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "writable": true,
           "pda": {
             "seeds": [
@@ -1480,14 +1474,14 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": []
     },
     {
-      "name": "requestWithdrawal",
+      "name": "request_withdrawal",
       "discriminator": [
         251,
         85,
@@ -1500,7 +1494,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1538,18 +1532,18 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "lpPosition",
+          "name": "lp_position",
           "writable": true,
           "pda": {
             "seeds": [
@@ -1572,34 +1566,34 @@ export type Anemone = {
           }
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault that holds USDC"
           ],
           "writable": true
         },
         {
-          "name": "lpMint",
+          "name": "lp_mint",
           "docs": [
             "LP token mint — program burns shares"
           ],
           "writable": true
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC)"
           ]
         },
         {
-          "name": "withdrawerLpTokenAccount",
+          "name": "withdrawer_lp_token_account",
           "docs": [
             "Withdrawer's LP token account (source — burns from here)"
           ],
           "writable": true
         },
         {
-          "name": "withdrawerTokenAccount",
+          "name": "withdrawer_token_account",
           "docs": [
             "Withdrawer's USDC token account (destination)"
           ],
@@ -1618,14 +1612,14 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "writable": true
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino reserve — must match `market.underlying_reserve`. Typed as",
             "AccountLoader so we can read the live exchange rate fields needed to",
@@ -1636,44 +1630,44 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "kaminoLendingMarket"
+          "name": "kamino_lending_market"
         },
         {
-          "name": "kaminoLendingMarketAuthority"
+          "name": "kamino_lending_market_authority"
         },
         {
-          "name": "reserveLiquidityMint"
+          "name": "reserve_liquidity_mint"
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "collateralTokenProgram"
+          "name": "collateral_token_program"
         },
         {
-          "name": "liquidityTokenProgram"
+          "name": "liquidity_token_program"
         },
         {
-          "name": "instructionSysvarAccount"
+          "name": "instruction_sysvar_account"
         },
         {
-          "name": "kaminoProgram"
+          "name": "kamino_program"
         }
       ],
       "args": [
         {
-          "name": "sharesToBurn",
+          "name": "shares_to_burn",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "setKeeper",
+      "name": "set_keeper",
       "discriminator": [
         102,
         94,
@@ -1686,7 +1680,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "writable": true,
           "pda": {
             "seeds": [
@@ -1710,19 +1704,19 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": [
         {
-          "name": "newKeeper",
+          "name": "new_keeper",
           "type": "pubkey"
         }
       ]
     },
     {
-      "name": "setMarketCaps",
+      "name": "set_market_caps",
       "discriminator": [
         179,
         76,
@@ -1735,7 +1729,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1773,12 +1767,12 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
@@ -1787,23 +1781,23 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": [
         {
-          "name": "maxLpNav",
+          "name": "max_lp_nav",
           "type": "u64"
         },
         {
-          "name": "maxPositionNotional",
+          "name": "max_position_notional",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "setRateIndexOracle",
+      "name": "set_rate_index_oracle",
       "docs": [
         "Admin-only utility for clusters where Kamino K-Lend is not deployed",
         "(localnet/devnet) and for surfpool E2E that need to drive rate-index",
@@ -1824,7 +1818,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1862,12 +1856,12 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
@@ -1876,19 +1870,19 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": [
         {
-          "name": "rateIndex",
+          "name": "rate_index",
           "type": "u128"
         }
       ]
     },
     {
-      "name": "settlePeriod",
+      "name": "settle_period",
       "discriminator": [
         115,
         57,
@@ -1901,7 +1895,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -1939,29 +1933,29 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "swapPosition",
+          "name": "swap_position",
           "writable": true
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "LP vault — pays trader profits / receives trader losses"
           ],
           "writable": true
         },
         {
-          "name": "collateralVault",
+          "name": "collateral_vault",
           "docs": [
             "Collateral vault — holds trader margin and the protocol-fee source"
           ],
@@ -1976,11 +1970,11 @@ export type Anemone = {
           ],
           "writable": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         },
         {
-          "name": "underlyingMint",
+          "name": "underlying_mint",
           "docs": [
             "The underlying token mint (e.g. USDC) — needed for transfer_checked"
           ]
@@ -1993,13 +1987,13 @@ export type Anemone = {
           "signer": true
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         }
       ],
       "args": []
     },
     {
-      "name": "syncKaminoYield",
+      "name": "sync_kamino_yield",
       "discriminator": [
         128,
         113,
@@ -2030,18 +2024,18 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino Reserve — must match the market's underlying_reserve. The",
             "AccountLoader handles deserialization for the post-refresh read."
@@ -2049,43 +2043,43 @@ export type Anemone = {
           "writable": true
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "docs": [
             "Our k-token balance — the input to the USDC-value math."
           ]
         },
         {
-          "name": "kaminoLendingMarket"
+          "name": "kamino_lending_market"
         },
         {
-          "name": "pythOracle",
+          "name": "pyth_oracle",
           "docs": [
             "is configured for a different price source."
           ]
         },
         {
-          "name": "switchboardPriceOracle"
+          "name": "switchboard_price_oracle"
         },
         {
-          "name": "switchboardTwapOracle"
+          "name": "switchboard_twap_oracle"
         },
         {
-          "name": "scopePrices",
+          "name": "scope_prices",
           "docs": [
             "configured price source)."
           ]
         },
         {
-          "name": "kaminoProgram"
+          "name": "kamino_program"
         },
         {
-          "name": "tokenProgram"
+          "name": "token_program"
         }
       ],
       "args": []
     },
     {
-      "name": "unpauseMarket",
+      "name": "unpause_market",
       "discriminator": [
         219,
         203,
@@ -2098,7 +2092,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -2136,12 +2130,12 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
@@ -2150,14 +2144,14 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": []
     },
     {
-      "name": "unpauseProtocol",
+      "name": "unpause_protocol",
       "discriminator": [
         183,
         154,
@@ -2170,7 +2164,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "writable": true,
           "pda": {
             "seeds": [
@@ -2194,14 +2188,14 @@ export type Anemone = {
           "name": "authority",
           "signer": true,
           "relations": [
-            "protocolState"
+            "protocol_state"
           ]
         }
       ],
       "args": []
     },
     {
-      "name": "updateRateIndex",
+      "name": "update_rate_index",
       "discriminator": [
         191,
         173,
@@ -2214,7 +2208,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -2252,18 +2246,18 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "docs": [
             "Kamino Reserve account — must match what the market was created with."
           ]
@@ -2286,7 +2280,7 @@ export type Anemone = {
       "args": []
     },
     {
-      "name": "withdrawFromKamino",
+      "name": "withdraw_from_kamino",
       "discriminator": [
         177,
         144,
@@ -2299,7 +2293,7 @@ export type Anemone = {
       ],
       "accounts": [
         {
-          "name": "protocolState",
+          "name": "protocol_state",
           "pda": {
             "seeds": [
               {
@@ -2350,62 +2344,62 @@ export type Anemone = {
               {
                 "kind": "account",
                 "path": "market.underlying_reserve",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               },
               {
                 "kind": "account",
                 "path": "market.tenor_seconds",
-                "account": "swapMarket"
+                "account": "SwapMarket"
               }
             ]
           }
         },
         {
-          "name": "lpVault",
+          "name": "lp_vault",
           "docs": [
             "Our LP vault — receives USDC back from Kamino"
           ],
           "writable": true
         },
         {
-          "name": "kaminoDepositAccount",
+          "name": "kamino_deposit_account",
           "docs": [
             "Our kamino deposit account — source of k-tokens to redeem"
           ],
           "writable": true
         },
         {
-          "name": "kaminoReserve",
+          "name": "kamino_reserve",
           "writable": true
         },
         {
-          "name": "kaminoLendingMarket"
+          "name": "kamino_lending_market"
         },
         {
-          "name": "kaminoLendingMarketAuthority"
+          "name": "kamino_lending_market_authority"
         },
         {
-          "name": "reserveLiquidityMint"
+          "name": "reserve_liquidity_mint"
         },
         {
-          "name": "reserveLiquiditySupply",
+          "name": "reserve_liquidity_supply",
           "writable": true
         },
         {
-          "name": "reserveCollateralMint",
+          "name": "reserve_collateral_mint",
           "writable": true
         },
         {
-          "name": "collateralTokenProgram"
+          "name": "collateral_token_program"
         },
         {
-          "name": "liquidityTokenProgram"
+          "name": "liquidity_token_program"
         },
         {
-          "name": "instructionSysvarAccount"
+          "name": "instruction_sysvar_account"
         },
         {
-          "name": "kaminoProgram",
+          "name": "kamino_program",
           "docs": [
             "Kamino K-Lend program — must match market.underlying_protocol"
           ]
@@ -2413,7 +2407,7 @@ export type Anemone = {
       ],
       "args": [
         {
-          "name": "collateralAmount",
+          "name": "collateral_amount",
           "type": "u64"
         }
       ]
@@ -2421,7 +2415,7 @@ export type Anemone = {
   ],
   "accounts": [
     {
-      "name": "lpPosition",
+      "name": "LpPosition",
       "discriminator": [
         105,
         241,
@@ -2434,7 +2428,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "protocolState",
+      "name": "ProtocolState",
       "discriminator": [
         33,
         51,
@@ -2447,7 +2441,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "reserve",
+      "name": "Reserve",
       "discriminator": [
         43,
         242,
@@ -2460,7 +2454,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "swapMarket",
+      "name": "SwapMarket",
       "discriminator": [
         1,
         225,
@@ -2473,7 +2467,7 @@ export type Anemone = {
       ]
     },
     {
-      "name": "swapPosition",
+      "name": "SwapPosition",
       "discriminator": [
         65,
         203,
@@ -2488,7 +2482,7 @@ export type Anemone = {
   ],
   "events": [
     {
-      "name": "lpWithdrawal",
+      "name": "LpWithdrawal",
       "discriminator": [
         252,
         217,
@@ -2504,153 +2498,153 @@ export type Anemone = {
   "errors": [
     {
       "code": 6000,
-      "name": "invalidReserve",
+      "name": "InvalidReserve",
       "msg": "Kamino reserve does not match market's underlying_reserve"
     },
     {
       "code": 6001,
-      "name": "invalidRateIndex",
+      "name": "InvalidRateIndex",
       "msg": "Rate index cannot be zero"
     },
     {
       "code": 6002,
-      "name": "invalidElapsedTime",
+      "name": "InvalidElapsedTime",
       "msg": "Elapsed time must be positive"
     },
     {
       "code": 6003,
-      "name": "mathOverflow",
+      "name": "MathOverflow",
       "msg": "Math overflow"
     },
     {
       "code": 6004,
-      "name": "marketPaused",
+      "name": "MarketPaused",
       "msg": "Market is paused"
     },
     {
       "code": 6005,
-      "name": "invalidVault",
+      "name": "InvalidVault",
       "msg": "Invalid vault address"
     },
     {
       "code": 6006,
-      "name": "invalidMint",
+      "name": "InvalidMint",
       "msg": "Invalid mint address"
     },
     {
       "code": 6007,
-      "name": "invalidAmount",
+      "name": "InvalidAmount",
       "msg": "Amount must be greater than zero"
     },
     {
       "code": 6008,
-      "name": "insufficientShares",
+      "name": "InsufficientShares",
       "msg": "Insufficient shares for withdrawal"
     },
     {
       "code": 6009,
-      "name": "poolUndercollateralized",
+      "name": "PoolUndercollateralized",
       "msg": "Withdrawal would leave pool undercollateralized"
     },
     {
       "code": 6010,
-      "name": "staleOracle",
+      "name": "StaleOracle",
       "msg": "Reserve data is stale — refresh before updating rate"
     },
     {
       "code": 6011,
-      "name": "utilizationExceeded",
+      "name": "UtilizationExceeded",
       "msg": "Pool utilization would exceed maximum allowed"
     },
     {
       "code": 6012,
-      "name": "insufficientCollateral",
+      "name": "InsufficientCollateral",
       "msg": "Insufficient collateral for required initial margin"
     },
     {
       "code": 6013,
-      "name": "rateIndexNotInitialized",
+      "name": "RateIndexNotInitialized",
       "msg": "Rate index not initialized — keeper must update rate first"
     },
     {
       "code": 6014,
-      "name": "settlementNotDue",
+      "name": "SettlementNotDue",
       "msg": "Settlement period has not elapsed yet"
     },
     {
       "code": 6015,
-      "name": "positionNotOpen",
+      "name": "PositionNotOpen",
       "msg": "Position is not open"
     },
     {
       "code": 6016,
-      "name": "slippageExceeded",
+      "name": "SlippageExceeded",
       "msg": "Offered rate exceeds trader's slippage tolerance"
     },
     {
       "code": 6017,
-      "name": "positionNotMatured",
+      "name": "PositionNotMatured",
       "msg": "Position is not matured — cannot claim yet"
     },
     {
       "code": 6018,
-      "name": "aboveMaintenanceMargin",
+      "name": "AboveMaintenanceMargin",
       "msg": "Position is above maintenance margin — cannot liquidate"
     },
     {
       "code": 6019,
-      "name": "invalidAuthority",
+      "name": "InvalidAuthority",
       "msg": "Invalid authority — caller is not the protocol keeper"
     },
     {
       "code": 6020,
-      "name": "insufficientVaultLiquidity",
+      "name": "InsufficientVaultLiquidity",
       "msg": "LP vault liquidity is insufficient for this claim — keeper must rebalance"
     },
     {
       "code": 6021,
-      "name": "rateMoveTooLarge",
+      "name": "RateMoveTooLarge",
       "msg": "Rate index growth between settlements exceeds the circuit-breaker cap"
     },
     {
       "code": 6022,
-      "name": "paramOutOfRange",
+      "name": "ParamOutOfRange",
       "msg": "Parameter exceeds its protocol-level safety cap"
     },
     {
       "code": 6023,
-      "name": "unsupportedMintExtensions",
+      "name": "UnsupportedMintExtensions",
       "msg": "Mint uses an unsupported token program (only classic SPL Token allowed in v1)"
     },
     {
       "code": 6024,
-      "name": "staleNav",
+      "name": "StaleNav",
       "msg": "LP NAV snapshot is stale — bundle sync_kamino_yield in the same transaction"
     },
     {
       "code": 6025,
-      "name": "unpaidPnlOutstanding",
+      "name": "UnpaidPnlOutstanding",
       "msg": "Position has unpaid PnL owed by the LP vault — wait for keeper to refill and settle again"
     },
     {
       "code": 6026,
-      "name": "protocolPaused",
+      "name": "ProtocolPaused",
       "msg": "Protocol is paused — admin has blocked new swaps and LP deposits"
     },
     {
       "code": 6027,
-      "name": "poolCapExceeded",
+      "name": "PoolCapExceeded",
       "msg": "Deposit would exceed the market's LP NAV cap"
     },
     {
       "code": 6028,
-      "name": "positionCapExceeded",
+      "name": "PositionCapExceeded",
       "msg": "Position notional exceeds the market's per-trade cap"
     }
   ],
   "types": [
     {
-      "name": "bigFractionBytes",
+      "name": "BigFractionBytes",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -2680,7 +2674,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "borrowRateCurve",
+      "name": "BorrowRateCurve",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -2694,7 +2688,7 @@ export type Anemone = {
               "array": [
                 {
                   "defined": {
-                    "name": "curvePoint"
+                    "name": "CurvePoint"
                   }
                 },
                 11
@@ -2705,7 +2699,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "curvePoint",
+      "name": "CurvePoint",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -2714,18 +2708,18 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "utilizationRateBps",
+            "name": "utilization_rate_bps",
             "type": "u32"
           },
           {
-            "name": "borrowRateBps",
+            "name": "borrow_rate_bps",
             "type": "u32"
           }
         ]
       }
     },
     {
-      "name": "lastUpdate",
+      "name": "LastUpdate",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -2742,7 +2736,7 @@ export type Anemone = {
             "type": "u8"
           },
           {
-            "name": "priceStatus",
+            "name": "price_status",
             "type": "u8"
           },
           {
@@ -2758,12 +2752,12 @@ export type Anemone = {
       }
     },
     {
-      "name": "lpPosition",
+      "name": "LpPosition",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "isInitialized",
+            "name": "is_initialized",
             "type": "bool"
           },
           {
@@ -2779,14 +2773,14 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "depositedAmount",
+            "name": "deposited_amount",
             "type": "u64"
           },
           {
             "name": "status",
             "type": {
               "defined": {
-                "name": "lpStatus"
+                "name": "LpStatus"
               }
             }
           },
@@ -2798,21 +2792,21 @@ export type Anemone = {
       }
     },
     {
-      "name": "lpStatus",
+      "name": "LpStatus",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "active"
+            "name": "Active"
           },
           {
-            "name": "withdrawn"
+            "name": "Withdrawn"
           }
         ]
       }
     },
     {
-      "name": "lpWithdrawal",
+      "name": "LpWithdrawal",
       "docs": [
         "Audit-trail event for every LP withdrawal. Indexers subscribe to this",
         "via Anchor's event listener (or parse program logs by tx) to build the",
@@ -2832,15 +2826,15 @@ export type Anemone = {
             "type": "pubkey"
           },
           {
-            "name": "sharesBurned",
+            "name": "shares_burned",
             "type": "u64"
           },
           {
-            "name": "grossAmount",
+            "name": "gross_amount",
             "type": "u64"
           },
           {
-            "name": "netAmount",
+            "name": "net_amount",
             "type": "u64"
           },
           {
@@ -2848,7 +2842,7 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "kaminoRedeemedUsdc",
+            "name": "kamino_redeemed_usdc",
             "type": "u64"
           },
           {
@@ -2859,27 +2853,27 @@ export type Anemone = {
       }
     },
     {
-      "name": "positionStatus",
+      "name": "PositionStatus",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "open"
+            "name": "Open"
           },
           {
-            "name": "matured"
+            "name": "Matured"
           },
           {
-            "name": "liquidated"
+            "name": "Liquidated"
           },
           {
-            "name": "closedEarly"
+            "name": "ClosedEarly"
           }
         ]
       }
     },
     {
-      "name": "priceHeuristic",
+      "name": "PriceHeuristic",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -2903,7 +2897,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "protocolState",
+      "name": "ProtocolState",
       "type": {
         "kind": "struct",
         "fields": [
@@ -2912,7 +2906,7 @@ export type Anemone = {
             "type": "pubkey"
           },
           {
-            "name": "keeperAuthority",
+            "name": "keeper_authority",
             "type": "pubkey"
           },
           {
@@ -2920,39 +2914,39 @@ export type Anemone = {
             "type": "pubkey"
           },
           {
-            "name": "totalMarkets",
+            "name": "total_markets",
             "type": "u64"
           },
           {
-            "name": "protocolFeeBps",
+            "name": "protocol_fee_bps",
             "docs": [
               "10% performance fee on LP spread (1000 = 10%)"
             ],
             "type": "u16"
           },
           {
-            "name": "openingFeeBps",
+            "name": "opening_fee_bps",
             "docs": [
               "0.05% on notional when opening swap (5 = 0.05%)"
             ],
             "type": "u16"
           },
           {
-            "name": "liquidationFeeBps",
+            "name": "liquidation_fee_bps",
             "docs": [
               "3% on remaining margin at liquidation (300 = 3%)"
             ],
             "type": "u16"
           },
           {
-            "name": "withdrawalFeeBps",
+            "name": "withdrawal_fee_bps",
             "docs": [
               "0.05% on LP withdrawal (5 = 0.05%)"
             ],
             "type": "u16"
           },
           {
-            "name": "earlyCloseFeeBps",
+            "name": "early_close_fee_bps",
             "docs": [
               "5% on collateral returned when trader closes early (500 = 5%)"
             ],
@@ -2976,7 +2970,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "pythConfiguration",
+      "name": "PythConfiguration",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -2992,7 +2986,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "reserve",
+      "name": "Reserve",
       "docs": [
         "Account: Reserve"
       ],
@@ -3008,35 +3002,35 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "lastUpdate",
+            "name": "last_update",
             "type": {
               "defined": {
-                "name": "lastUpdate"
+                "name": "LastUpdate"
               }
             }
           },
           {
-            "name": "lendingMarket",
+            "name": "lending_market",
             "type": "pubkey"
           },
           {
-            "name": "farmCollateral",
+            "name": "farm_collateral",
             "type": "pubkey"
           },
           {
-            "name": "farmDebt",
+            "name": "farm_debt",
             "type": "pubkey"
           },
           {
             "name": "liquidity",
             "type": {
               "defined": {
-                "name": "reserveLiquidity"
+                "name": "ReserveLiquidity"
               }
             }
           },
           {
-            "name": "reserveLiquidityPadding",
+            "name": "reserve_liquidity_padding",
             "type": {
               "array": [
                 "u64",
@@ -3048,12 +3042,12 @@ export type Anemone = {
             "name": "collateral",
             "type": {
               "defined": {
-                "name": "reserveCollateral"
+                "name": "ReserveCollateral"
               }
             }
           },
           {
-            "name": "reserveCollateralPadding",
+            "name": "reserve_collateral_padding",
             "type": {
               "array": [
                 "u64",
@@ -3065,12 +3059,12 @@ export type Anemone = {
             "name": "config",
             "type": {
               "defined": {
-                "name": "reserveConfig"
+                "name": "ReserveConfig"
               }
             }
           },
           {
-            "name": "configPadding",
+            "name": "config_padding",
             "type": {
               "array": [
                 "u64",
@@ -3079,11 +3073,11 @@ export type Anemone = {
             }
           },
           {
-            "name": "borrowedAmountOutsideElevationGroup",
+            "name": "borrowed_amount_outside_elevation_group",
             "type": "u64"
           },
           {
-            "name": "borrowedAmountsAgainstThisReserveInElevationGroups",
+            "name": "borrowed_amounts_against_this_reserve_in_elevation_groups",
             "type": {
               "array": [
                 "u64",
@@ -3104,7 +3098,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "reserveCollateral",
+      "name": "ReserveCollateral",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3113,15 +3107,15 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "mintPubkey",
+            "name": "mint_pubkey",
             "type": "pubkey"
           },
           {
-            "name": "mintTotalSupply",
+            "name": "mint_total_supply",
             "type": "u64"
           },
           {
-            "name": "supplyVault",
+            "name": "supply_vault",
             "type": "pubkey"
           },
           {
@@ -3146,7 +3140,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "reserveConfig",
+      "name": "ReserveConfig",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3159,11 +3153,11 @@ export type Anemone = {
             "type": "u8"
           },
           {
-            "name": "assetTier",
+            "name": "asset_tier",
             "type": "u8"
           },
           {
-            "name": "hostFixedInterestRateBps",
+            "name": "host_fixed_interest_rate_bps",
             "type": "u16"
           },
           {
@@ -3185,95 +3179,95 @@ export type Anemone = {
             }
           },
           {
-            "name": "protocolTakeRatePct",
+            "name": "protocol_take_rate_pct",
             "type": "u8"
           },
           {
-            "name": "protocolLiquidationFeePct",
+            "name": "protocol_liquidation_fee_pct",
             "type": "u8"
           },
           {
-            "name": "loanToValuePct",
+            "name": "loan_to_value_pct",
             "type": "u8"
           },
           {
-            "name": "liquidationThresholdPct",
+            "name": "liquidation_threshold_pct",
             "type": "u8"
           },
           {
-            "name": "minLiquidationBonusBps",
+            "name": "min_liquidation_bonus_bps",
             "type": "u16"
           },
           {
-            "name": "maxLiquidationBonusBps",
+            "name": "max_liquidation_bonus_bps",
             "type": "u16"
           },
           {
-            "name": "badDebtLiquidationBonusBps",
+            "name": "bad_debt_liquidation_bonus_bps",
             "type": "u16"
           },
           {
-            "name": "deleveragingMarginCallPeriodSecs",
+            "name": "deleveraging_margin_call_period_secs",
             "type": "u64"
           },
           {
-            "name": "deleveragingThresholdDecreaseBpsPerDay",
+            "name": "deleveraging_threshold_decrease_bps_per_day",
             "type": "u64"
           },
           {
             "name": "fees",
             "type": {
               "defined": {
-                "name": "reserveFees"
+                "name": "ReserveFees"
               }
             }
           },
           {
-            "name": "borrowRateCurve",
+            "name": "borrow_rate_curve",
             "type": {
               "defined": {
-                "name": "borrowRateCurve"
+                "name": "BorrowRateCurve"
               }
             }
           },
           {
-            "name": "borrowFactorPct",
+            "name": "borrow_factor_pct",
             "type": "u64"
           },
           {
-            "name": "depositLimit",
+            "name": "deposit_limit",
             "type": "u64"
           },
           {
-            "name": "borrowLimit",
+            "name": "borrow_limit",
             "type": "u64"
           },
           {
-            "name": "tokenInfo",
+            "name": "token_info",
             "type": {
               "defined": {
-                "name": "tokenInfo"
+                "name": "TokenInfo"
               }
             }
           },
           {
-            "name": "depositWithdrawalCap",
+            "name": "deposit_withdrawal_cap",
             "type": {
               "defined": {
-                "name": "withdrawalCaps"
+                "name": "WithdrawalCaps"
               }
             }
           },
           {
-            "name": "debtWithdrawalCap",
+            "name": "debt_withdrawal_cap",
             "type": {
               "defined": {
-                "name": "withdrawalCaps"
+                "name": "WithdrawalCaps"
               }
             }
           },
           {
-            "name": "elevationGroups",
+            "name": "elevation_groups",
             "type": {
               "array": [
                 "u8",
@@ -3282,15 +3276,15 @@ export type Anemone = {
             }
           },
           {
-            "name": "disableUsageAsCollOutsideEmode",
+            "name": "disable_usage_as_coll_outside_emode",
             "type": "u8"
           },
           {
-            "name": "utilizationLimitBlockBorrowingAbovePct",
+            "name": "utilization_limit_block_borrowing_above_pct",
             "type": "u8"
           },
           {
-            "name": "autodeleverageEnabled",
+            "name": "autodeleverage_enabled",
             "type": "u8"
           },
           {
@@ -3303,11 +3297,11 @@ export type Anemone = {
             }
           },
           {
-            "name": "borrowLimitOutsideElevationGroup",
+            "name": "borrow_limit_outside_elevation_group",
             "type": "u64"
           },
           {
-            "name": "borrowLimitAgainstThisCollateralInElevationGroup",
+            "name": "borrow_limit_against_this_collateral_in_elevation_group",
             "type": {
               "array": [
                 "u64",
@@ -3316,14 +3310,14 @@ export type Anemone = {
             }
           },
           {
-            "name": "deleveragingBonusIncreaseBpsPerDay",
+            "name": "deleveraging_bonus_increase_bps_per_day",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "reserveFees",
+      "name": "ReserveFees",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3332,11 +3326,11 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "borrowFeeSf",
+            "name": "borrow_fee_sf",
             "type": "u64"
           },
           {
-            "name": "flashLoanFeeSf",
+            "name": "flash_loan_fee_sf",
             "type": "u64"
           },
           {
@@ -3352,7 +3346,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "reserveLiquidity",
+      "name": "ReserveLiquidity",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3361,71 +3355,71 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "mintPubkey",
+            "name": "mint_pubkey",
             "type": "pubkey"
           },
           {
-            "name": "supplyVault",
+            "name": "supply_vault",
             "type": "pubkey"
           },
           {
-            "name": "feeVault",
+            "name": "fee_vault",
             "type": "pubkey"
           },
           {
-            "name": "availableAmount",
+            "name": "available_amount",
             "type": "u64"
           },
           {
-            "name": "borrowedAmountSf",
+            "name": "borrowed_amount_sf",
             "type": "u128"
           },
           {
-            "name": "marketPriceSf",
+            "name": "market_price_sf",
             "type": "u128"
           },
           {
-            "name": "marketPriceLastUpdatedTs",
+            "name": "market_price_last_updated_ts",
             "type": "u64"
           },
           {
-            "name": "mintDecimals",
+            "name": "mint_decimals",
             "type": "u64"
           },
           {
-            "name": "depositLimitCrossedTimestamp",
+            "name": "deposit_limit_crossed_timestamp",
             "type": "u64"
           },
           {
-            "name": "borrowLimitCrossedTimestamp",
+            "name": "borrow_limit_crossed_timestamp",
             "type": "u64"
           },
           {
-            "name": "cumulativeBorrowRateBsf",
+            "name": "cumulative_borrow_rate_bsf",
             "type": {
               "defined": {
-                "name": "bigFractionBytes"
+                "name": "BigFractionBytes"
               }
             }
           },
           {
-            "name": "accumulatedProtocolFeesSf",
+            "name": "accumulated_protocol_fees_sf",
             "type": "u128"
           },
           {
-            "name": "accumulatedReferrerFeesSf",
+            "name": "accumulated_referrer_fees_sf",
             "type": "u128"
           },
           {
-            "name": "pendingReferrerFeesSf",
+            "name": "pending_referrer_fees_sf",
             "type": "u128"
           },
           {
-            "name": "absoluteReferralRateSf",
+            "name": "absolute_referral_rate_sf",
             "type": "u128"
           },
           {
-            "name": "tokenProgram",
+            "name": "token_program",
             "type": "pubkey"
           },
           {
@@ -3450,7 +3444,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "scopeConfiguration",
+      "name": "ScopeConfiguration",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3459,11 +3453,11 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "priceFeed",
+            "name": "price_feed",
             "type": "pubkey"
           },
           {
-            "name": "priceChain",
+            "name": "price_chain",
             "type": {
               "array": [
                 "u16",
@@ -3472,7 +3466,7 @@ export type Anemone = {
             }
           },
           {
-            "name": "twapChain",
+            "name": "twap_chain",
             "type": {
               "array": [
                 "u16",
@@ -3484,77 +3478,77 @@ export type Anemone = {
       }
     },
     {
-      "name": "swapDirection",
+      "name": "SwapDirection",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "payFixed"
+            "name": "PayFixed"
           },
           {
-            "name": "receiveFixed"
+            "name": "ReceiveFixed"
           }
         ]
       }
     },
     {
-      "name": "swapMarket",
+      "name": "SwapMarket",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "protocolState",
+            "name": "protocol_state",
             "type": "pubkey"
           },
           {
-            "name": "underlyingProtocol",
+            "name": "underlying_protocol",
             "type": "pubkey"
           },
           {
-            "name": "underlyingReserve",
+            "name": "underlying_reserve",
             "type": "pubkey"
           },
           {
-            "name": "underlyingMint",
+            "name": "underlying_mint",
             "type": "pubkey"
           },
           {
-            "name": "lpVault",
+            "name": "lp_vault",
             "type": "pubkey"
           },
           {
-            "name": "kaminoDepositAccount",
+            "name": "kamino_deposit_account",
             "type": "pubkey"
           },
           {
-            "name": "collateralVault",
+            "name": "collateral_vault",
             "type": "pubkey"
           },
           {
-            "name": "lpMint",
+            "name": "lp_mint",
             "type": "pubkey"
           },
           {
-            "name": "tenorSeconds",
+            "name": "tenor_seconds",
             "type": "i64"
           },
           {
-            "name": "settlementPeriodSeconds",
+            "name": "settlement_period_seconds",
             "type": "i64"
           },
           {
-            "name": "maxUtilizationBps",
+            "name": "max_utilization_bps",
             "docs": [
               "6000 = 60%"
             ],
             "type": "u16"
           },
           {
-            "name": "baseSpreadBps",
+            "name": "base_spread_bps",
             "type": "u16"
           },
           {
-            "name": "lpNav",
+            "name": "lp_nav",
             "docs": [
               "Net asset value of the LP pool in underlying-token decimals. Tracks",
               "\"how much USDC the LPs collectively have claim to\", including yield",
@@ -3564,43 +3558,43 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "totalLpShares",
+            "name": "total_lp_shares",
             "type": "u64"
           },
           {
-            "name": "totalFixedNotional",
+            "name": "total_fixed_notional",
             "type": "u64"
           },
           {
-            "name": "totalVariableNotional",
+            "name": "total_variable_notional",
             "type": "u64"
           },
           {
-            "name": "previousRateIndex",
+            "name": "previous_rate_index",
             "type": "u128"
           },
           {
-            "name": "previousRateUpdateTs",
+            "name": "previous_rate_update_ts",
             "type": "i64"
           },
           {
-            "name": "currentRateIndex",
+            "name": "current_rate_index",
             "type": "u128"
           },
           {
-            "name": "lastRateUpdateTs",
+            "name": "last_rate_update_ts",
             "type": "i64"
           },
           {
-            "name": "totalOpenPositions",
+            "name": "total_open_positions",
             "type": "u64"
           },
           {
-            "name": "totalKaminoCollateral",
+            "name": "total_kamino_collateral",
             "type": "u64"
           },
           {
-            "name": "lastKaminoSnapshotUsdc",
+            "name": "last_kamino_snapshot_usdc",
             "docs": [
               "Last known USDC value of the k-tokens in `kamino_deposit_account`.",
               "Updated by `sync_kamino_yield`; the diff since this snapshot becomes",
@@ -3610,7 +3604,7 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "lastKaminoSyncTs",
+            "name": "last_kamino_sync_ts",
             "docs": [
               "Unix timestamp of the most recent `sync_kamino_yield` call. User-facing",
               "LP handlers require this to be recent via MAX_NAV_STALENESS_SECS so",
@@ -3629,7 +3623,7 @@ export type Anemone = {
             "type": "u8"
           },
           {
-            "name": "maxLpNav",
+            "name": "max_lp_nav",
             "docs": [
               "Hard cap on `lp_nav`. `deposit_liquidity` rejects when the resulting",
               "NAV would exceed this. Lets a fresh market grow gradually instead of",
@@ -3638,7 +3632,7 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "maxPositionNotional",
+            "name": "max_position_notional",
             "docs": [
               "Hard cap on a single trader's `notional` at `open_swap`. Limits the",
               "blast radius of any single position — even with a healthy pool, no",
@@ -3650,7 +3644,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "swapPosition",
+      "name": "SwapPosition",
       "type": {
         "kind": "struct",
         "fields": [
@@ -3666,7 +3660,7 @@ export type Anemone = {
             "name": "direction",
             "type": {
               "defined": {
-                "name": "swapDirection"
+                "name": "SwapDirection"
               }
             }
           },
@@ -3675,11 +3669,11 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "fixedRateBps",
+            "name": "fixed_rate_bps",
             "type": "u64"
           },
           {
-            "name": "spreadBpsAtOpen",
+            "name": "spread_bps_at_open",
             "docs": [
               "Spread component locked into `fixed_rate_bps` at open time. The",
               "quoted rate is `current_apy_bps ± spread_bps`; storing the spread",
@@ -3690,31 +3684,31 @@ export type Anemone = {
             "type": "u64"
           },
           {
-            "name": "collateralDeposited",
+            "name": "collateral_deposited",
             "type": "u64"
           },
           {
-            "name": "collateralRemaining",
+            "name": "collateral_remaining",
             "type": "u64"
           },
           {
-            "name": "entryRateIndex",
+            "name": "entry_rate_index",
             "type": "u128"
           },
           {
-            "name": "lastSettledRateIndex",
+            "name": "last_settled_rate_index",
             "type": "u128"
           },
           {
-            "name": "realizedPnl",
+            "name": "realized_pnl",
             "type": "i64"
           },
           {
-            "name": "numSettlements",
+            "name": "num_settlements",
             "type": "u16"
           },
           {
-            "name": "unpaidPnl",
+            "name": "unpaid_pnl",
             "docs": [
               "Trader PnL credit that the lp_vault could not cover at the moment of",
               "settlement/close/liquidation. Kept as i64 for symmetry but in practice",
@@ -3730,26 +3724,26 @@ export type Anemone = {
             "type": "i64"
           },
           {
-            "name": "openTimestamp",
+            "name": "open_timestamp",
             "type": "i64"
           },
           {
-            "name": "maturityTimestamp",
+            "name": "maturity_timestamp",
             "type": "i64"
           },
           {
-            "name": "nextSettlementTs",
+            "name": "next_settlement_ts",
             "type": "i64"
           },
           {
-            "name": "lastSettlementTs",
+            "name": "last_settlement_ts",
             "type": "i64"
           },
           {
             "name": "status",
             "type": {
               "defined": {
-                "name": "positionStatus"
+                "name": "PositionStatus"
               }
             }
           },
@@ -3765,7 +3759,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "switchboardConfiguration",
+      "name": "SwitchboardConfiguration",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3774,18 +3768,18 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "priceAggregator",
+            "name": "price_aggregator",
             "type": "pubkey"
           },
           {
-            "name": "twapAggregator",
+            "name": "twap_aggregator",
             "type": "pubkey"
           }
         ]
       }
     },
     {
-      "name": "tokenInfo",
+      "name": "TokenInfo",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3806,48 +3800,48 @@ export type Anemone = {
             "name": "heuristic",
             "type": {
               "defined": {
-                "name": "priceHeuristic"
+                "name": "PriceHeuristic"
               }
             }
           },
           {
-            "name": "maxTwapDivergenceBps",
+            "name": "max_twap_divergence_bps",
             "type": "u64"
           },
           {
-            "name": "maxAgePriceSeconds",
+            "name": "max_age_price_seconds",
             "type": "u64"
           },
           {
-            "name": "maxAgeTwapSeconds",
+            "name": "max_age_twap_seconds",
             "type": "u64"
           },
           {
-            "name": "scopeConfiguration",
+            "name": "scope_configuration",
             "type": {
               "defined": {
-                "name": "scopeConfiguration"
+                "name": "ScopeConfiguration"
               }
             }
           },
           {
-            "name": "switchboardConfiguration",
+            "name": "switchboard_configuration",
             "type": {
               "defined": {
-                "name": "switchboardConfiguration"
+                "name": "SwitchboardConfiguration"
               }
             }
           },
           {
-            "name": "pythConfiguration",
+            "name": "pyth_configuration",
             "type": {
               "defined": {
-                "name": "pythConfiguration"
+                "name": "PythConfiguration"
               }
             }
           },
           {
-            "name": "blockPriceUsage",
+            "name": "block_price_usage",
             "type": "u8"
           },
           {
@@ -3872,7 +3866,7 @@ export type Anemone = {
       }
     },
     {
-      "name": "withdrawalCaps",
+      "name": "WithdrawalCaps",
       "serialization": "bytemuckunsafe",
       "repr": {
         "kind": "c"
@@ -3881,23 +3875,23 @@ export type Anemone = {
         "kind": "struct",
         "fields": [
           {
-            "name": "configCapacity",
+            "name": "config_capacity",
             "type": "i64"
           },
           {
-            "name": "currentTotal",
+            "name": "current_total",
             "type": "i64"
           },
           {
-            "name": "lastIntervalStartTimestamp",
+            "name": "last_interval_start_timestamp",
             "type": "u64"
           },
           {
-            "name": "configIntervalLengthSeconds",
+            "name": "config_interval_length_seconds",
             "type": "u64"
           }
         ]
       }
     }
   ]
-};
+}

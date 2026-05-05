@@ -188,7 +188,9 @@ export async function bootstrapEnvironment(): Promise<BootstrapResult> {
         new BN(TENOR_SECONDS.toString()),
         new BN(SETTLEMENT_PERIOD_SECONDS.toString()),
         MAX_UTILIZATION_BPS,
-        BASE_SPREAD_BPS
+        BASE_SPREAD_BPS,
+        new BN("18446744073709551615"),
+        new BN("18446744073709551615")
       )
       .accountsStrict({
         protocolState: protocolStatePda,
@@ -316,7 +318,9 @@ export async function bootstrapShortMarket(
         new BN(SHORT_TENOR_SECONDS.toString()),
         new BN(SHORT_SETTLEMENT_PERIOD_SECONDS.toString()),
         MAX_UTILIZATION_BPS,
-        BASE_SPREAD_BPS
+        BASE_SPREAD_BPS,
+        new BN("18446744073709551615"),
+        new BN("18446744073709551615")
       )
       .accountsStrict({
         protocolState: ctx.protocolStatePda,
@@ -379,7 +383,9 @@ export async function bootstrapKaminoMarket(
         new BN(KAMINO_TENOR_SECONDS.toString()),
         new BN(KAMINO_SETTLEMENT_PERIOD_SECONDS.toString()),
         MAX_UTILIZATION_BPS,
-        BASE_SPREAD_BPS
+        BASE_SPREAD_BPS,
+        new BN("18446744073709551615"),
+        new BN("18446744073709551615")
       )
       .accountsStrict({
         protocolState: ctx.protocolStatePda,
