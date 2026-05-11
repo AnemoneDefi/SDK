@@ -1,5 +1,5 @@
 {
-  "name": "@anemone/sdk",
+  "name": "@anemonedefi/sdk",
   "version": "0.1.0",
   "description": "TypeScript SDK for the Anemone Interest Rate Swap Protocol on Solana",
   "main": "dist/index.js",
